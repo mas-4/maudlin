@@ -7,8 +7,8 @@ import scrapy
 
 
 class NewscrawlerItem(scrapy.Item):
-    url = scrapy.field()
-    title = scrapy.field()
-    date = scrapy.field()
-    byline = scrapy.field()
-    text = scrapy.field()
+    url = scrapy.Field()
+    title = scrapy.Field()
+    date = scrapy.Field()
+    byline = scrapy.Field()
+    text = scrapy.Field()
