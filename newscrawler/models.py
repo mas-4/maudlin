@@ -39,6 +39,9 @@ class Article(Base):
 
     agency_id = sa.Column(sa.Integer, sa.ForeignKey('agency.id'))
 
+    def __repr__(self):
+        return f'<Article {self.agency.name}: {self.title} {self.date}>'
+
 
 class Agency(Base):
     __tablename__ = 'agency'
@@ -47,3 +50,6 @@ class Agency(Base):
     name = sa.Column(sa.String)
     homepage = sa.Column(sa.String)
     articles = relationship('Article', backref='agency')
+
+    def __repr__(self):
+        return f'<Agency {self.name}: {self.homepage} ({len(self.articles)}) articles>'
