@@ -8,6 +8,12 @@
 from itemadapter import ItemAdapter
 from newscrawler.models import db_connect, create_table, Article
 from sqlalchemy.orm import sessionmaker
+try:
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
+except:
+    import nltk
+    nltk.download('vader_lexicon')
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
 class NewscrawlerPipeline:
@@ -15,6 +21,7 @@ class NewscrawlerPipeline:
         engine = db_connect()
         create_table(engine)
         self.Session = sessionmaker(bind=engine)
+        self.sid = SentimentIntensityAnalyzer()
 
     def process_item(self, item, spider):
         session = self.Session()
@@ -24,6 +31,11 @@ class NewscrawlerPipeline:
         article.byline = item['byline']
         article.date = item['date']
         article.text = item['text']
+        sid = self.sid.polarity_scores(article.text)
+        article.pos = sid['pos']
+        article.neg = sid['neg']
+        article.neu = sid['neu']
+        article.compound = sid['compound']
 
         exists = session.query(Article).filter_by(title=article.title).first()
         if exists:
