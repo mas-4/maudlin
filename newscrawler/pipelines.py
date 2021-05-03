@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-from newscrawler.models import db_connect, create_table, Article
+from newscrawler.models import db_connect, create_table, Article, Agency
 from sqlalchemy.orm import sessionmaker
 try:
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -20,7 +20,7 @@ class NewscrawlerPipeline:
     def __init__(self):
         engine = db_connect()
         create_table(engine)
-        self.Session = sessionmaker(bind=engine)
+        self.Session = sessionmaker(bind=engine, autoflush=False)
         self.sid = SentimentIntensityAnalyzer()
 
     def process_item(self, item, spider):
@@ -36,6 +36,13 @@ class NewscrawlerPipeline:
         article.neg = sid['neg']
         article.neu = sid['neu']
         article.compound = sid['compound']
+
+        agency = session.query(Agency).filter_by(name=item['agency']).first()
+        if not agency:
+            agency = Agency()
+            agency.name = item['agency']
+            agency.homepage = item['start']
+        article.agency = agency
 
         exists = session.query(Article).filter_by(title=article.title).first()
         if exists:

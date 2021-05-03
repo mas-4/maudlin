@@ -22,6 +22,7 @@ def get_session():
         create_table(engine)
         return sessionmaker(bind=engine)()
 
+
 class Article(Base):
     __tablename__ = 'article'
 
@@ -35,3 +36,14 @@ class Article(Base):
     neu = sa.Column(sa.Float)
     neg = sa.Column(sa.Float)
     compound = sa.Column(sa.Float)
+
+    agency_id = sa.Column(sa.Integer, sa.ForeignKey('agency.id'))
+
+
+class Agency(Base):
+    __tablename__ = 'agency'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    name = sa.Column(sa.String)
+    homepage = sa.Column(sa.String)
+    articles = relationship('Article', backref='agency')

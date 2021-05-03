@@ -15,6 +15,8 @@ class CnnSpider(scrapy.Spider):
     def parse(self, response):
         item = NewscrawlerItem()
         if response.url != self.start_urls[0]:
+            item['agency'] = 'CNN'
+            item['start'] = self.start_urls[0]
             item['url'] = response.url
             item['title'] = response.css('h2::text').get()
             item['byline'] = response.css('#byline::text').get()
