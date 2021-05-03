@@ -7,6 +7,8 @@ import scrapy
 
 
 class NewscrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    url = scrapy.field()
+    title = scrapy.field()
+    date = scrapy.field()
+    byline = scrapy.field()
+    text = scrapy.field()
