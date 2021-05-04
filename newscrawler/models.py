@@ -4,8 +4,12 @@ from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy as sa
 from scrapy.utils.project import get_project_settings
 
+from dotenv import load_dotenv
+import os
 
-CONNECTION_STRING = 'sqlite:///articles.db'
+load_dotenv('../.env')
+
+CONNECTION_STRING = os.environ.get('DB_URI', 'sqlite:///articles.db')
 
 Base = declarative_base()
 

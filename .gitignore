@@ -155,3 +155,4 @@ Thumbs.db
 .vim
 *.db*
 setup.py
+.env
