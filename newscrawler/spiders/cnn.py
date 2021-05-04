@@ -1,5 +1,5 @@
 import scrapy
-from datetime import datetime as dt
+from dateutil import parser
 from scrapy.linkextractors import LinkExtractor
 from newscrawler.items import NewscrawlerItem
 from bs4 import BeautifulSoup as BS
@@ -22,6 +22,7 @@ class CnnSpider(scrapy.Spider):
             item['byline'] = response.css('#byline::text').get()
             date = response.css('#published\ datetime::text').get()
             date = ''.join(date.split(':')[1:]).strip()
+            date = parser.parse(date)
             item['date'] = date
             soup = BS(response.text, 'lxml')
             article = soup.find('div', class_=CLASS)
