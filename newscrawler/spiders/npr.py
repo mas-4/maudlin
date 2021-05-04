@@ -35,6 +35,7 @@ class NPRSpider(CrawlSpider, BoilerPlateParser):
         container = soup.find('div', class_=CLASS)
         paragraphs = container.find_all('p', id=None)
         item['text'] = self.joinparagraphs(paragraphs)
+
         if len(item['text']) < 100:
             return None
         return item
