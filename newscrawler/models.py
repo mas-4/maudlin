@@ -14,7 +14,7 @@ except:
     pass
 
 CONNECTION_STRING = os.environ.get('DB_URI', 'sqlite:///articles.db')
-logging.info("Connection string:", CONNECTION_STRING)
+logging.info("Connection string: " + CONNECTION_STRING)
 
 
 metadata = MetaData()
