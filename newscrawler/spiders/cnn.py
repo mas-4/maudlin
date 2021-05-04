@@ -1,22 +1,19 @@
 import scrapy
 from dateutil import parser
-from newscrawler.items import NewscrawlerItem
 from bs4 import BeautifulSoup as BS
+from newscrawler.mixins import BoilerPlateParser
 
 CLASS = 'afe4286c'
 
-class CnnSpider(scrapy.Spider):
+class CnnSpider(scrapy.Spider, BoilerPlateParser):
     name = 'cnn'
     allowed_domains = ['cnn.com']
     start_urls = ['http://lite.cnn.com/en']
 
 
     def parse(self, response):
-        item = NewscrawlerItem()
         if response.url != self.start_urls[0]:
-            item['agency'] = self.name
-            item['start'] = self.start_urls[0]
-            item['url'] = response.url
+            item = self.prepopulate_item(response)
 
             item['title'] = response.css('h2::text').get()
             item['byline'] = response.css('#byline::text').get()
@@ -29,10 +26,7 @@ class CnnSpider(scrapy.Spider):
             soup = BS(response.text, 'lxml')
             article = soup.find('div', class_=CLASS)
             paragraphs = article.find_all('p', id=None)
-            text = []
-            for p in paragraphs:
-                text.append(p.text.strip())
-            item['text'] = '\n\n'.join(text)
+            item['text'] = self.joinparagraphs(paragraphs)
             yield item
 
         for article in response.css('li > a::attr(href)'):

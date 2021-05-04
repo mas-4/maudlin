@@ -1,14 +1,15 @@
+import logging
 import scrapy
 from dateutil import parser
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule, CrawlSpider
-from newscrawler.items import NewscrawlerItem
 from bs4 import BeautifulSoup as BS
-import logging
+
+from newscrawler.mixins import BoilerPlateParser
 
 CLASS = 'paragraphs-container'
 
-class NPRSpider(CrawlSpider):
+class NPRSpider(CrawlSpider, BoilerPlateParser):
     name = 'npr'
     allowed_domains = ['text.npr.org']
     start_urls = ['https://text.npr.org']
@@ -17,10 +18,7 @@ class NPRSpider(CrawlSpider):
     ]
 
     def parse(self, response):
-        item = NewscrawlerItem()
-        item['agency'] = self.name
-        item['start'] = self.start_urls[0]
-        item['url'] = response.url
+        item = self.prepopulate_item(response)
 
         item['title'] = response.css('h1.story-title::text').get()
         item['byline'] = response.css('.story-head > p:nth-child(2)::text').get()
@@ -36,10 +34,7 @@ class NPRSpider(CrawlSpider):
         soup = BS(response.text)
         container = soup.find('div', class_=CLASS)
         paragraphs = container.find_all('p', id=None)
-        text = []
-        for p in paragraphs:
-            text.append(p.text.strip())
-        item['text'] = '\n\n'.join(text)
+        item['text'] = self.joinparagraphs(paragraphs)
         if len(item['text']) < 100:
             return None
         return item
