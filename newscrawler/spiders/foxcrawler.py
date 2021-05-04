@@ -9,7 +9,7 @@ import logging
 CLASS = 'article-body'
 
 class FoxCrawler(CrawlSpider, BoilerPlateParser):
-    name = 'fox'
+    name = 'foxcrawler'
     allowed_domains = ['www.foxnews.com']
     start_urls = ['https://www.foxnews.com/']
     rules = [

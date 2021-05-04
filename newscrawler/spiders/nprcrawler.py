@@ -10,7 +10,7 @@ from newscrawler.mixins import BoilerPlateParser
 CLASS = 'paragraphs-container'
 
 class NPRSpider(CrawlSpider, BoilerPlateParser):
-    name = 'npr'
+    name = 'nprcrawler'
     allowed_domains = ['text.npr.org']
     start_urls = ['https://text.npr.org']
     rules = [
