@@ -7,8 +7,11 @@ from scrapy.utils.project import get_project_settings
 import logging
 
 import os
-from dotenv import load_dotenv
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except:
+    pass
 
 CONNECTION_STRING = os.environ.get('DB_URI', 'sqlite:///articles.db')
 logging.info("Connection string:", CONNECTION_STRING)
