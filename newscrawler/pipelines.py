@@ -8,13 +8,11 @@
 from itemadapter import ItemAdapter
 from newscrawler.models import db_connect, create_table, Article, Agency
 from sqlalchemy.orm import sessionmaker
-try:
-    from nltk.sentiment.vader import SentimentIntensityAnalyzer
-except:
-    import nltk
-    nltk.download('vader_lexicon')
-    from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import logging
 
+import nltk
+nltk.download('vader_lexicon')
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 class NewscrawlerPipeline:
     def __init__(self):
