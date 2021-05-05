@@ -38,7 +38,5 @@ class NprSpider(scrapy.Spider, BoilerPlateParser):
             if len(item['text']) > 100:
                 yield item
 
-        logging.info("*********")
-        logging.info(response.css('li > a::attr(href)'))
         for a in response.css('li > a::attr(href)'):
             yield response.follow(a, callback=self.parse)
