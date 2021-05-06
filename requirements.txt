@@ -39,7 +39,7 @@ queuelib==1.6.1
 regex==2021.4.4
 requests==2.25.1
 Scrapy==2.5.0
-scrapyd-client==1.2.0a1
+git+https://github.com/malan88/scrapyd-client/
 selenium==3.141.0
 service-identity==18.1.0
 six==1.15.0
