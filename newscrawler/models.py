@@ -45,7 +45,7 @@ class Article(Base):
 
     url = sa.Column(sa.String)
     title = sa.Column(sa.String)
-    date = sa.Column(sa.String)
+    date = sa.Column(sa.Date)
     byline = sa.Column(sa.String)
     text = sa.Column(sa.Text)
     pos = sa.Column(sa.Float)
