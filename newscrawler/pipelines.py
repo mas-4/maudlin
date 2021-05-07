@@ -29,7 +29,7 @@ class NewscrawlerPipeline:
         article.pos = sid['pos']
         article.neg = sid['neg']
         article.neu = sid['neu']
-
+        article.sent = article.pos - article.neg
         article.compound = sid['compound']
 
         agency = Agency.query.filter_by(name=item['agency']).first()

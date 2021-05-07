@@ -1,6 +1,28 @@
 from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
 
+def windowed_query(q, column, windowsize):
+    """"Break a Query into chunks on a given column."""
+
+    single_entity = q.is_single_entity
+    q = q.add_column(column).order_by(column)
+    last_id = None
+
+    while True:
+        subq = q
+        if last_id is not None:
+            subq = subq.filter(column > last_id)
+        chunk = subq.limit(windowsize).all()
+        if not chunk:
+            break
+        last_id = chunk[-1][-1]
+        for row in chunk:
+            if single_entity:
+                yield row[0]
+            else:
+                yield row[0:-1]
+
+
 class Base(db.Model):
     __abstract__ = True
 
@@ -22,6 +44,7 @@ class Article(Base):
     pos = db.Column(db.Float)
     neu = db.Column(db.Float)
     neg = db.Column(db.Float)
+    sent = db.Column(db.Float)
     compound = db.Column(db.Float)
 
     agency_id = db.Column(db.Integer, db.ForeignKey('agency.id'))
@@ -34,7 +57,7 @@ class Article(Base):
 
     @property
     def sentiment(self):
-        return round((self.pos - self.neg) * 100, 2)
+        return round(self.sent * 100, 2)
 
     @property
     def neutrality(self):
