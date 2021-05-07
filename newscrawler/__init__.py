@@ -1,5 +1,5 @@
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
+from logging.handlers import RotatingFileHandler
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
