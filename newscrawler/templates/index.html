@@ -4,7 +4,7 @@
     <h2>Articles in DB: {{ count }}</h2>
     <h1>Today's articles</h1>
     {% for agency in structure.keys() %}
-        <h2>{{ agency.name }} &times;{{ len(structure[agency]) }}</h2>
+        <h2>{{ agency.name }} &times;{{ len(structure[agency]) }} [{{ agency.sent }}%, {{ agency.neut }}%]</h2>
         <ol>
             {% for article in structure[agency] %}
                 <li style="margin: 1rem">

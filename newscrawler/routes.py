@@ -16,6 +16,14 @@ def color(num):
         color = f'{d}0000'
     return color
 
+def average(agency, sent, neut):
+    if not hasattr(agency, 'count'):
+        agency.count = 1
+        agency.sent = 0
+        agency.neut = 0
+    agency.sent += (sent - agency.sent) / agency.count
+    agency.neut += (neut - agency.neut) / agency.count
+
 @app.route('/')
 def index():
     articles = Article.query.filter(Article.date==date.today()).all()
@@ -24,10 +32,15 @@ def index():
         article.sentiment = round((article.pos - article.neg) * 100, 2)
         article.neutral = round(article.neu * 100, 2)
         article.color = color(article.sentiment)
+        average(article.agency, article.sentiment, article.neutral)
         if article.agency in structure:
             structure[article.agency].append(article)
         else:
             structure[article.agency] = [article]
+    for agency in structure.keys():
+        agency.sent = round(agency.sent, 2)
+        agency.neut = round(agency.neut, 2)
+        structure[agency].sort(key=lambda l: l.sentiment, reverse=True)
     return render_template('index.html',
                            count=len(articles),
                            structure=structure)
