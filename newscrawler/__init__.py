@@ -22,4 +22,6 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Newscrawler startup')
 
+app.jinja_env.globals.update(len=len)
+
 from newscrawler import routes, models, errors

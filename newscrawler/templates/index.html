@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Articles in DB: {{ count }}</h1>
+    <h2>Articles in DB: {{ count }}</h2>
+    <h1>Today's articles</h1>
+    {% for agency in structure.keys() %}
+        <h2>{{ agency.name }} &times;{{ len(structure[agency]) }}</h2>
+        <ol>
+            {% for article in structure[agency] %}
+                <li style="margin: 1rem">
+                    <a style="padding: 0.25rem; font-family: sans-serif; text-decoration: none; color: white; background-color: #{{ article.color }}" href="{{ article.url }}">{{ article.title }}</a>
+                    [{{ article.sentiment }}%, {{ article.neutral }}%]
+                </li>
+            {% endfor %}
+        </ol>
+    {% endfor %}
 {% endblock %}
