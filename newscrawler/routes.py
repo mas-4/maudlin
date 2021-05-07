@@ -3,19 +3,6 @@ from newscrawler import app
 from newscrawler.models import Agency, Article
 from datetime import date
 
-def color(num):
-    h = (num*155) / 100
-    h += 100
-    h = abs(h)
-    d = str(hex(int(h))) # convert to hex and strip x
-    d = format(int(h), 'x')
-    d = d.zfill(2)
-    if num > 0:
-        color = f'00{d}00'
-    else:
-        color = f'{d}0000'
-    return color
-
 def average(agency, sent, neut):
     if not hasattr(agency, 'count'):
         agency.count = 1
