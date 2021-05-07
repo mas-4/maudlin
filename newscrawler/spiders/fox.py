@@ -22,15 +22,10 @@ class FoxSpider(scrapy.Spider, BoilerPlateParser):
             # fragile
             item['byline'] = response.css('.author-byline > span:nth-child(2) > span:nth-child(1) > a:nth-child(1)::text').get()
 
-            if not item['byline']:
-                return None
-
-
             date = soup.find('meta', attrs={'name': 'dc.date'})
-            if not date['content']:
-                return None
-            date = parser.parse(date['content'])
-            item['date'] = date
+            if date['content']:
+                date = parser.parse(date['content'])
+                item['date'] = date
 
             text = soup.find('div', class_=CLASS)
             if not text:
