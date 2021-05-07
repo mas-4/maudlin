@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <ul>
+    <ul class="cards">
     {% for agency in agencies %}
         <li>
             <h1><a href="{{ agency.homepage }}">{{ agency.name.upper() }}</a></h1>
