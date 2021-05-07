@@ -10,6 +10,7 @@ from PIL import Image
 
 
 def average(agency, sent, neut):
+    """Create a cumulative average for all articles to a given agency."""
     if not hasattr(agency, 'count'):
         agency.count = 1
         agency.sent = 0
@@ -20,6 +21,9 @@ def average(agency, sent, neut):
 
 @app.route('/')
 def index():
+    """Generates an index of today's articles, sorted by sentiment, colored by
+    sentiment.
+    """
     articles = Article.query.filter(Article.date==date.today()).all()
     structure = {}
     for article in articles:
