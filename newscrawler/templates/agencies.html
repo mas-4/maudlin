@@ -3,7 +3,7 @@
     <ul class="cards">
     {% for agency in agencies %}
         <li>
-            <h1><a href="{{ agency.homepage }}">{{ agency.name.upper() }}</a></h1>
+            <h1><a href="{{ url_for('agency', agency=agency.name) }}">{{ agency.name.upper() }}</a></h1>
             <p>Articles: &times;{{ agency.articles.count() }}
             <p>Sentiment: {{ agency.cumulative_sentiment }}%</p>
             <p>Neutrality: {{ agency.cumulative_neutrality }}%</p>

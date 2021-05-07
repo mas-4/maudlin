@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ agency.name.upper() }}</h1>
+<h3>Statistics</h3>
+<ul>
+    <li>Articles: &times;{{ agency.articles.count() }}</li>
+    <li>Homepage: <a href="{{ agency.homepage }}">{{ agency.homepage }}</a></li>
+    <li>Sentiment overall: {{ agency.cumulative_sentiment }}%</li>
+    <li>Neutrality overall: {{ agency.cumulative_neutrality }}%</li>
+</ul>
+
+<h3>Last 100 articles</h3>
+<ol>
+{% for article in agency.articles.order_by(Article.date.desc()).limit(100) %}
+    <li>
+        <ul style="list-style-type: none;">
+            <li><a href="{{ article.url }}">{{ article.title }}</a> {{ article.date }}</li>
+            <li>Sentiment: {{ article.sentiment }}%</li>
+            <li>Neutrality: {{ article.neutrality }}%</li>
+        </ul>
+    </li>
+{% endfor %}
+</ol>
+
+{% endblock %}

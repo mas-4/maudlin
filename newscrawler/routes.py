@@ -46,3 +46,8 @@ def index():
 def agencies():
     agencies = Agency.query.all()
     return render_template('agencies.html', agencies=agencies)
+
+@app.route('/agency/<agency>')
+def agency(agency):
+    agency = Agency.query.filter(Agency.name == agency).first_or_404()
+    return render_template('agency.html', agency=agency, Article=Article)
