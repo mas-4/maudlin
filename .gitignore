@@ -156,3 +156,4 @@ Thumbs.db
 *.db*
 setup.py
 .env
+logs
