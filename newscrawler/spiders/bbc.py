@@ -23,7 +23,7 @@ class BbcSpider(scrapy.Spider, BoilerPlateParser):
 
             paragraphs = soup.find_all('div', attrs={'data-component': 'text-block'})
             item['text'] = self.joinparagraphs(paragraphs)
-            if not text:
+            if not item['text']:
                 yield None
             else:
                 yield item
