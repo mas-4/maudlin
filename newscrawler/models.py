@@ -1,59 +1,28 @@
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from newscrawler import db
+from sqlalchemy.ext.declarative import declared_attr
 
-import sqlalchemy as sa
-from scrapy.utils.project import get_project_settings
-import logging
-
-import os
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except:
-    pass
-
-CONNECTION_STRING = os.environ.get('DB_URI', 'sqlite:///articles.db')
-logging.info("Connection string: " + CONNECTION_STRING)
-
-
-metadata = MetaData()
-
-class Base_:
+class Base(db.Model):
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
 
-    id = sa.Column(sa.Integer, primary_key=True)
-
-Base = declarative_base(cls=Base_, metadata=metadata)
-
-def db_connect():
-    return create_engine(CONNECTION_STRING)
-
-def create_table(engine):
-    Base.metadata.create_all(engine)
-
-def get_session():
-        engine = db_connect()
-        create_table(engine)
-        return sessionmaker(bind=engine)()
+    id = db.Column(db.Integer, primary_key=True)
 
 
 class Article(Base):
     __tablename__ = 'article'
 
-    url = sa.Column(sa.String)
-    title = sa.Column(sa.String)
-    date = sa.Column(sa.Date)
-    byline = sa.Column(sa.String)
-    text = sa.Column(sa.Text)
-    pos = sa.Column(sa.Float)
-    neu = sa.Column(sa.Float)
-    neg = sa.Column(sa.Float)
-    compound = sa.Column(sa.Float)
+    url = db.Column(db.String)
+    title = db.Column(db.String)
+    date = db.Column(db.Date)
+    byline = db.Column(db.String)
+    text = db.Column(db.Text)
+    pos = db.Column(db.Float)
+    neu = db.Column(db.Float)
+    neg = db.Column(db.Float)
+    compound = db.Column(db.Float)
 
-    agency_id = sa.Column(sa.Integer, sa.ForeignKey('agency.id'))
+    agency_id = db.Column(db.Integer, db.ForeignKey('agency.id'))
 
     def __repr__(self):
         return f'<Article {self.agency.name}: {self.title} {self.date}>'
@@ -62,23 +31,9 @@ class Article(Base):
 class Agency(Base):
     __tablename__ = 'agency'
 
-    name = sa.Column(sa.String)
-    homepage = sa.Column(sa.String)
-    articles = relationship('Article', backref='agency')
+    name = db.Column(db.String)
+    homepage = db.Column(db.String)
+    articles = db.relationship('Article', backref='agency')
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({len(self.articles)}) articles>'
-
-
-def db_connect():
-    return create_engine(CONNECTION_STRING)
-
-
-def create_table(engine):
-    Base.metadata.create_all(engine)
-
-
-def get_session():
-        engine = db_connect()
-        create_table(engine)
-        return sessionmaker(bind=engine)()
