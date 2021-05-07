@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('url', sa.String(), nullable=True),
     sa.Column('title', sa.String(), nullable=True),
-    sa.Column('date', sa.String(), nullable=True),
+    sa.Column('date', sa.Date(), nullable=True),
     sa.Column('byline', sa.String(), nullable=True),
     sa.Column('text', sa.Text(), nullable=True),
     sa.Column('pos', sa.Float(), nullable=True),
