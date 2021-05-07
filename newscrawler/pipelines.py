@@ -12,9 +12,12 @@ class NewscrawlerPipeline:
         self.sid = SentimentIntensityAnalyzer()
 
     def process_item(self, item, spider):
-        article = Article.query.filter_by(title=item['title']).first()
+        article = Article.query.filter(Article.title==item['title']).first()
+        created = False
         if not article:
             article = Article()
+            db.session.add(article)
+            created = True
         article = Article()
         article.title = item['title']
         article.url = item['url']
@@ -35,7 +38,8 @@ class NewscrawlerPipeline:
             agency.cum_sent = 0.0
             agency.cum_neut = 0.0
 
-        article.agency = agency
+        if created:
+            article.agency = agency
 
         sent = article.pos - article.neg
 
@@ -43,7 +47,6 @@ class NewscrawlerPipeline:
         agency.cum_neut += (article.neu - agency.cum_neut) / agency.articles.count()
 
         try:
-            db.session.add(article)
             db.session.commit()
         except Exception as e:
             logging.info(article, e)
