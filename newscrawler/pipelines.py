@@ -32,14 +32,12 @@ class NewscrawlerPipeline:
             agency = Agency()
             agency.name = item['agency']
             agency.homepage = item['start']
+            agency.cum_sent = 0.0
+            agency.cum_neut = 0.0
 
         article.agency = agency
 
         sent = article.pos - article.neg
-
-        # verify there is a value
-        agency.cum_sent = agency.cum_sent if agency.cum_sent else 0.0
-        agency.cum_neut = agency.cum_neut if agency.cum_neut else 0.0
 
         agency.cum_sent += (sent - agency.cum_sent) / agency.articles.count()
         agency.cum_neut += (article.neu - agency.cum_neut) / agency.articles.count()

@@ -44,3 +44,8 @@ def index():
     return render_template('index.html',
                            count=len(articles),
                            structure=structure)
+
+@app.route('/agencies')
+def agencies():
+    agencies = Agency.query.all()
+    return render_template('agencies.html', agencies=agencies)

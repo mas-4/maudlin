@@ -43,3 +43,11 @@ class Agency(Base):
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({len(self.articles)}) articles>'
+
+    @property
+    def cumulative_sentiment(self):
+        return round(self.cum_sent*100, 2)
+
+    @property
+    def cumulative_neutrality(self):
+        return round(self.cum_neut*100, 2)
