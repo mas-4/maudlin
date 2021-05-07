@@ -1,9 +1,10 @@
 import io
 import string
+import time
+from datetime import date
 from flask import render_template, send_file
 from newscrawler import app
 from newscrawler.models import Agency, Article
-from datetime import date
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
 
@@ -53,13 +54,16 @@ stopwords.extend(['say', 'said', 'news', 'app', 'says'])
 stopwords.extend([l for l in string.ascii_lowercase + string.ascii_uppercase])
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
+    t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []
     for article in agency.articles.filter(Article.date==date.today()):
         text.append(article.text)
+    app.logger.info(f"{time.time()-t}s for generating text")
 
+    t = time.time()
     wordcloud = WordCloud(
-        width=600, height=400, background_color='white',
+        width=400, height=400, background_color='white',
         stopwords=stopwords)\
         .generate(' '.join(text)).to_array()
 
@@ -67,4 +71,6 @@ def agencywordcloud(agency):
     file_object = io.BytesIO()
     img.save(file_object, 'PNG')
     file_object.seek(0)
+
+    app.logger.info(f"{time.time()-t}s for generating image")
     return send_file(file_object, mimetype='image/png')
