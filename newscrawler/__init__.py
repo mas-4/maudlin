@@ -21,6 +21,7 @@ if not app.debug:
 
     app.logger.setLevel(logging.INFO)
     app.logger.info('Newscrawler startup')
+    app.logger.info(Config.SQLALCHEMY_DATABASE_URI)
 
 app.jinja_env.globals.update(len=len)
 
