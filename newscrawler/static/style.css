@@ -2,4 +2,4 @@ html { font-family: sans-serif; padding: 1rem; }
 a { text-decoration: none; }
 .cards { display: flex; flex-wrap: wrap; }
 .cards li { margin: 1rem; }
-ul { list-style-type: none; }
+ul.cards { list-style-type: none; }

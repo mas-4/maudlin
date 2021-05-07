@@ -32,6 +32,27 @@ class Article(Base):
     def __repr__(self):
         return f'<Article {self.agency.name}: {self.title} {self.date}>'
 
+    @property
+    def sentiment(self):
+        return round((self.pos - self.neg) * 100, 2)
+
+    @property
+    def neutrality(self):
+        return round(self.neu * 100, 2)
+
+    @property
+    def color(self):
+        h = (self.sentiment*155) / 100
+        h += 100
+        h = abs(h)
+        d = format(int(h), 'x')
+        d = d.zfill(2)
+        if self.sentiment > 0:
+            color = f'00{d}00'
+        else:
+            color = f'{d}0000'
+        return color
+
 
 class Agency(Base):
     __tablename__ = 'agency'

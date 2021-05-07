@@ -29,10 +29,7 @@ def index():
     articles = Article.query.filter(Article.date==date.today()).all()
     structure = {}
     for article in articles:
-        article.sentiment = round((article.pos - article.neg) * 100, 2)
-        article.neutral = round(article.neu * 100, 2)
-        article.color = color(article.sentiment)
-        average(article.agency, article.sentiment, article.neutral)
+        average(article.agency, article.sentiment, article.neutrality)
         if article.agency in structure:
             structure[article.agency].append(article)
         else:
