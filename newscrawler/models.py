@@ -27,7 +27,7 @@ class Article(Base):
     agency_id = db.Column(db.Integer, db.ForeignKey('agency.id'))
     agency = db.relationship('Agency',
                              primaryjoin='Article.agency_id==Agency.id',
-                             backref='articles')
+                             backref=db.backref('articles', lazy='dynamic'))
 
     def __repr__(self):
         return f'<Article {self.agency.name}: {self.title} {self.date}>'
@@ -38,6 +38,8 @@ class Agency(Base):
 
     name = db.Column(db.String)
     homepage = db.Column(db.String)
+    cum_sent = db.Column(db.Float, default=0.0, nullable=False)
+    cum_neut = db.Column(db.Float, default=0.0, nullable=False)
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({len(self.articles)}) articles>'
