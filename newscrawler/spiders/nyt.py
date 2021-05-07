@@ -31,7 +31,7 @@ class NytSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            links = [a['href'] for a in soup.find_all('a', attrs={'data-story': True})]
+            links = set([a['href'] for a in soup.find_all('a', attrs={'data-story': True})])
 
             for link in links:
                 yield response.follow(link, callback=self.parse)
