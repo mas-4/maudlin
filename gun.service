@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve newscrawler
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+WorkingDirectory=/home/pi/newscrawler
+Environment="PATH=/home/pi/newscrawler/.venv/bin"
+ExecStart=/home/pi/newscrawler/.venv/bin/gunicorn --workers 3 --bind unix:newscrawler.sock -m 007 app:app
+
+[Install]
+WantedBy=multi-user.target
