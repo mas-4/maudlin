@@ -1,10 +1,7 @@
 import scrapy
 from dateutil import parser
-from scrapy.spiders import Rule, CrawlSpider
-from scrapy.linkextractors import LinkExtractor
 from bs4 import BeautifulSoup as BS
 from newscrawler.mixins import BoilerPlateParser
-import logging
 
 CLASS = 'article-body'
 
