@@ -32,14 +32,13 @@ def index():
         agency.sent = round(agency.sent, 2)
         agency.neut = round(agency.neut, 2)
         structure[agency].sort(key=lambda l: l.sentiment, reverse=True)
-    return render_template('index.html',
-                           count=len(articles),
+    return render_template('index.html', count=len(articles),
                            structure=structure)
 
 
 @app.route('/agencies')
 def agencies():
-    agencies = Agency.query.all()
+    agencies = Agency.query.order_by(Agency.name).all()
     return render_template('agencies.html', agencies=agencies)
 
 
