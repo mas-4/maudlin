@@ -1,5 +1,6 @@
 from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
+from functools import reduce
 
 def windowed_query(q, column, windowsize):
     """"Break a Query into chunks on a given column."""
@@ -95,3 +96,9 @@ class Agency(Base):
     @property
     def cumulative_neutrality(self):
         return round(self.cum_neut*100, 2)
+
+    def reaccumulate(self):
+        cumsum = sum(a.pos-a.neg for a in self.articles)
+        self.cum_sent = cumsum / self.articles.count()
+        cumsum = sum(a.neu for a in self.articles)
+        self.cum_neut = cumsum / self.articles.count()
