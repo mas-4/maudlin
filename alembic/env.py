@@ -21,8 +21,8 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from newscrawler.models import Base
-target_metadata = Base.metadata
+from newscrawler import db
+target_metadata = db.metadata
 
 print(target_metadata)
 # other values from the config, defined by the needs of env.py,
