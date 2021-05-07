@@ -6,8 +6,8 @@ from dateutil import parser
 
 class BbcSpider(scrapy.Spider, BoilerPlateParser):
     name = 'bbc'
-    allowed_domains = ['bbc.com']
-    start_urls = ['https://www.bbc.com/']
+    allowed_domains = ['bbc.com', 'bbc.co.uk']
+    start_urls = ['http://feeds.bbci.co.uk/news/rss.xml']
 
     def parse(self, response):
         soup = BS(response.text, 'lxml')
@@ -26,6 +26,5 @@ class BbcSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            for a in soup.find('div', id='orb-modules')\
-                    .find_all('a', class_='top-list-item__link'):
-                yield response.follow(a['href'], callback=self.parse)
+            for a in soup.find_all('guid'):
+                yield response.follow(a.text, callback=self.parse)
