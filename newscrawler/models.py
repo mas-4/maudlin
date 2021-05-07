@@ -42,7 +42,7 @@ class Agency(Base):
     cum_neut = db.Column(db.Float, default=0.0, nullable=False)
 
     def __repr__(self):
-        return f'<Agency {self.name}: {self.homepage} ({len(self.articles)}) articles>'
+        return f'<Agency {self.name}: {self.homepage} ({self.articles.count()}) articles>'
 
     @property
     def cumulative_sentiment(self):
