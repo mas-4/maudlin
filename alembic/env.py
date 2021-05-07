@@ -7,12 +7,13 @@ from alembic import context
 
 import sys
 sys.path.append('..')
-from newscrawler.models import Agency, Article, CONNECTION_STRING
+from newscrawler.models import Agency, Article
+from config import Config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option('sqlalchemy.url', CONNECTION_STRING)
+config.set_main_option('sqlalchemy.url', Config.SQLALCHEMY_DATABASE_URI)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -2,6 +2,8 @@ from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
 
 class Base(db.Model):
+    __abstract__ = True
+
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
@@ -23,6 +25,9 @@ class Article(Base):
     compound = db.Column(db.Float)
 
     agency_id = db.Column(db.Integer, db.ForeignKey('agency.id'))
+    agency = db.relationship('Agency',
+                             primaryjoin='Article.agency_id==Agency.id',
+                             backref='articles')
 
     def __repr__(self):
         return f'<Article {self.agency.name}: {self.title} {self.date}>'
@@ -33,7 +38,6 @@ class Agency(Base):
 
     name = db.Column(db.String)
     homepage = db.Column(db.String)
-    articles = db.relationship('Article', backref='agency')
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({len(self.articles)}) articles>'
