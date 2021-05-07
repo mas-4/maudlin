@@ -3,6 +3,7 @@ from newscrawler import app
 from newscrawler.models import Agency, Article
 from datetime import date
 
+
 def average(agency, sent, neut):
     if not hasattr(agency, 'count'):
         agency.count = 1
@@ -10,6 +11,7 @@ def average(agency, sent, neut):
         agency.neut = 0
     agency.sent += (sent - agency.sent) / agency.count
     agency.neut += (neut - agency.neut) / agency.count
+
 
 @app.route('/')
 def index():
@@ -29,10 +31,12 @@ def index():
                            count=len(articles),
                            structure=structure)
 
+
 @app.route('/agencies')
 def agencies():
     agencies = Agency.query.all()
     return render_template('agencies.html', agencies=agencies)
+
 
 @app.route('/agency/<agency>')
 def agency(agency):
