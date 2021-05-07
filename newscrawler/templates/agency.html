@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>{{ agency.name.upper() }}</h1>
+<img src="{{ url_for('agencywordcloud', agency=agency.name) }}"/>
 <h3>Statistics</h3>
 <ul>
     <li>Articles: &times;{{ agency.articles.count() }}</li>

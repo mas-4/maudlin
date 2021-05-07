@@ -1,7 +1,10 @@
-from flask import render_template
+from flask import render_template, send_file
 from newscrawler import app
 from newscrawler.models import Agency, Article
 from datetime import date
+from wordcloud import WordCloud, STOPWORDS
+from PIL import Image
+import io
 
 
 def average(agency, sent, neut):
@@ -42,3 +45,21 @@ def agencies():
 def agency(agency):
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     return render_template('agency.html', agency=agency, Article=Article)
+
+@app.route('/agency/<agency>/wordcloud')
+def agencywordcloud(agency):
+    agency = Agency.query.filter(Agency.name == agency).first_or_404()
+    text = []
+    for article in agency.articles.filter(Article.date==date.today()):
+        text.append(article.text)
+    stopwords = list(STOPWORDS)
+    stopwords.extend(['say', 'said'])
+    wordcloud = WordCloud(
+        width=600, height=400, background_color='white',
+        stopwords=stopwords)\
+        .generate(' '.join(text)).to_array()
+    img = Image.fromarray(wordcloud.astype('uint8'))
+    file_object = io.BytesIO()
+    img.save(file_object, 'PNG')
+    file_object.seek(0)
+    return send_file(file_object, mimetype='image/png')
