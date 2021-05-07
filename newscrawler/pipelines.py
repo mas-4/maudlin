@@ -12,6 +12,9 @@ class NewscrawlerPipeline:
         self.sid = SentimentIntensityAnalyzer()
 
     def process_item(self, item, spider):
+        exists = Article.query.filter_by(title=item['title']).first()
+        if exists:
+            return item
         article = Article()
         article.title = item['title']
         article.url = item['url']
@@ -29,16 +32,14 @@ class NewscrawlerPipeline:
             agency = Agency()
             agency.name = item['agency']
             agency.homepage = item['start']
+
         article.agency = agency
 
-        exists = Article.query.filter_by(title=article.title).first()
-        if exists:
-            return item
         try:
             db.session.add(article)
             db.session.commit()
         except Exception as e:
-            print(article, e)
+            logging.info(article, e)
             db.session.rollback()
 
         return item
