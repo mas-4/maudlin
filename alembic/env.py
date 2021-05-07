@@ -8,7 +8,7 @@ from alembic import context
 import sys
 sys.path.append('..')
 from newscrawler.models import Agency, Article
-from config import Config
+from newscrawler.config import Config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

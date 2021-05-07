@@ -3,7 +3,7 @@ from logging.handlers import RotatingFileHandler
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from config import Config
+from newscrawler.config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
