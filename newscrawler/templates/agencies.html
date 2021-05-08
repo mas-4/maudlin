@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+    <div>
+        Sort by:
+        {% for sort in sorts %}
+            <a style="margin-left: 1rem;" href="{{ url_for('agencies', sort=sort) }}">{{ sort }}</a>
+        {% endfor %}
+    </div>
     <ul class="cards">
     {% for agency in agencies %}
         <li>

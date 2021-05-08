@@ -2,8 +2,9 @@ import io
 import string
 import time
 from datetime import date
-from flask import render_template, send_file
-from newscrawler import app
+from flask import render_template, send_file, request
+from sqlalchemy import func
+from newscrawler import app, db
 from newscrawler.models import Agency, Article
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
@@ -42,8 +43,16 @@ def index():
 
 @app.route('/agencies')
 def agencies():
-    agencies = Agency.query.order_by(Agency.name).all()
-    return render_template('agencies.html', agencies=agencies)
+    sort = request.args.get('sort', default='Name')
+    sorts = {
+        'Name': Agency.query.order_by(Agency.name),
+        'Sentiment': Agency.query.order_by(Agency.cum_sent.desc()),
+        'Neutrality': Agency.query.order_by(Agency.cum_neut.desc()),
+        'Articles': (Agency.query.join(Article).group_by(Agency.id)
+                        .order_by(db.func.count(Article.id).desc())),
+    }
+    agencies = sorts[sort].all()
+    return render_template('agencies.html', agencies=agencies, sorts=sorts.keys())
 
 
 @app.route('/agency/<agency>')
@@ -53,11 +62,12 @@ def agency(agency):
 
 
 stopwords = list(STOPWORDS)
-stopwords.extend(['say', 'said', 'news', 'app', 'says'])
+stopwords.extend(['say', 'said', 'says']) # clean some default words
+# strip stray letters
 stopwords.extend([l for l in string.ascii_lowercase + string.ascii_uppercase])
+
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
-
     t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []

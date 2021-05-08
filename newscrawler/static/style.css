@@ -1,5 +1,5 @@
 html { font-family: sans-serif; padding: 1rem; }
 a { text-decoration: none; }
 .cards { display: flex; flex-wrap: wrap; }
-.cards li { margin: 1rem; width: 20rem; }
+.cards li { margin-right: 1rem; margin-top: 2rem; width: 20rem; }
 ul.cards { list-style-type: none; }
