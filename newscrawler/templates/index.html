@@ -5,7 +5,7 @@
     <h2>Total in database &times;{{ dbcount }}</h2>
     <h2>key: [sentiment, neutrality]</h2>
     {% for agency in structure.keys() %}
-        <h3>
+        <h1 style="margin-top: 3rem; margin-bottom: 2rem;">
             <span style="margin-right: 0.5rem; padding: 0.25rem; color: white; background-color: #{{ agency.color }}">
                 {{ agency.name.upper() }}
             </span>
@@ -14,7 +14,7 @@
             <span style="color: #{{ color(agency.sent) }}">{{ agency.sent }}%</span>,
             <span style="color: #{{ color(agency.neut) }}">{{ agency.neut }}%</span>
             ]
-        </h3>
+        </h1>
         <ol style="list-style-type: none;">
             {% for article in structure[agency] %}
                 <li style="margin: 1rem">
