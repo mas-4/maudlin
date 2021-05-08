@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="pagination">
+        Pages:
+        {% for p in pages %}
+            <a href="{{ url_for('articles', per_page=per_page, page=p, sort=sort, direction=direction) }}" {% if page == p %}class="active"{% endif %}>{{ p }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        Per Page:
+        {% for p in per_pages %}
+            <a href="{{ url_for('articles', per_page=p, page=page, sort=sort, direction=direction) }}" {% if per_page == p %}class="active"{% endif %}>{{ p }}</a>
+        {% endfor %}
+    </div>
+
+    <table class="article-table">
+        <thead>
+            <tr>
+                <th>Agency</th>
+                {# title #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='title', direction='asc' if direction=='desc' else 'desc') }}">Title</a></th>
+                {# date #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='date', direction='asc' if direction=='desc' else 'desc') }}">Date</a></th>
+                {# byline #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='byline', direction='asc' if direction=='desc' else 'desc') }}">Byline</a></th>
+                {# pos #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='pos', direction='asc' if direction=='desc' else 'desc') }}">Positive</a></th>
+                {# neg #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='neg', direction='asc' if direction=='desc' else 'desc') }}">Negative</a></th>
+                {# neu #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='neu', direction='asc' if direction=='desc' else 'desc') }}">Neutral</a></th>
+                {# compound #}
+                <th><a href="{{ url_for('articles', per_page=per_page, sort='compound', direction='asc' if direction=='desc' else 'desc') }}">Compound</a></th>
+                <th>Sentiment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td>{{ article.agency.name.upper() }}</td>
+                    <td style="max-width: 20rem;"><a href="{{ article.url }}">{{ article.title }}</a></td>
+                    <td>{{ article.date }}</td>
+                    <td>{{ article.byline }}</td>
+                    <td>{{ article.pos }}</td>
+                    <td>{{ article.neg }}</td>
+                    <td>{{ article.neu }}</td>
+                    <td>{{ article.compound }}</td>
+                    <td>{{ round(article.pos - article.neg, 4) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        Pages:
+        {% for p in pages %}
+            <a href="{{ url_for('articles', per_page=per_page, page=p, direction=direction, sort=sort) }}" {% if page == p %}class="active"{% endif %} >{{ p }}</a>
+        {% endfor %}
+    </div>
+{% endblock %}
+

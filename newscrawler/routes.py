@@ -1,8 +1,9 @@
+import math
 import io
 import string
 import time
 from datetime import date
-from flask import render_template, send_file, request
+from flask import render_template, send_file, request, url_for
 from sqlalchemy import func
 from newscrawler import app, db
 from newscrawler.models import Agency, Article
@@ -115,3 +116,29 @@ def agencywordcloud(agency):
     app.logger.info(f"{time.time()-t}s for generating image")
 
     return send_file(file_object, mimetype='image/png')
+
+
+@app.route('/articles')
+def articles():
+    page = int(request.args.get('page', default='1'))
+    sort = request.args.get('sort', default='date')
+    direction = request.args.get('direction', default='asc')
+    per_page = int(request.args.get('per_page', default='50'))
+    per_pages = [10, 25, 50, 100, 250, 500]
+    sorts = {
+        'title': Article.title,
+        'date': Article.date,
+        'byline': Article.byline,
+        'pos': Article.pos,
+        'neg': Article.neg,
+        'neu': Article.neu,
+        'compound': Article.compound,
+    }
+    pages = list(range(1, math.ceil(Article.query.count() / 50)))
+    arts = Article.query\
+        .order_by(getattr(sorts[sort], direction, 'asc')())\
+        .filter(Article.agency!=None)\
+        .paginate(page, per_page, True)
+    return render_template('articles.html', articles=arts.items, pages=pages,
+                           sort=sort, page=page, direction=direction,
+                           per_page=per_page, per_pages=per_pages)

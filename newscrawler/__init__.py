@@ -27,5 +27,6 @@ if not app.debug:
 app.jinja_env.globals.update(len=len)
 app.jinja_env.globals.update(color=utils.color)
 app.jinja_env.globals.update(clamp=utils.clamp)
+app.jinja_env.globals.update(round=round)
 
 from newscrawler import routes, models, errors
