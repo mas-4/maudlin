@@ -24,7 +24,7 @@ results. Let's see who is the most positive and who is the most negative news.
 - [X] Vice
 - [X] Vox
 - [X] Daily Beast
-- [ ] Salon
+- [X] Salon
 - [ ] New Yorker
 - [ ] WaPo (probably pretty difficult)
 
