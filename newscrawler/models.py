@@ -102,3 +102,16 @@ class Agency(Base):
         self.cum_sent = cumsum / self.articles.count()
         cumsum = sum(a.neu for a in self.articles)
         self.cum_neut = cumsum / self.articles.count()
+
+    @property
+    def color(self):
+        h = (self.cumulative_sentiment*155) / 100
+        h += 100
+        h = abs(h)
+        d = format(int(h), 'x')
+        d = d.zfill(2)
+        if self.cumulative_sentiment > 0:
+            color = f'00{d}00'
+        else:
+            color = f'{d}0000'
+        return color
