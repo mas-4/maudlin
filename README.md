@@ -26,7 +26,9 @@ results. Let's see who is the most positive and who is the most negative news.
 - [X] Daily Beast
 - [X] Salon
 - [X] New Yorker
-- [ ] WaPo (probably pretty difficult)
+- [X] WaPo (Required sending headers form requests, scrapy default headers
+  refused, kind of slow but that's okay. I think they don't mind scraping but
+  they give it the slow lane)
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
 
