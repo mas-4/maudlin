@@ -18,7 +18,7 @@ results. Let's see who is the most positive and who is the most negative news.
 - [X] The Guardian
 - [X] Slate
 - [X] The Blaze
-- [ ] Breitbart
+- [X] Breitbart
 - [ ] US News
 - [ ] Telegraph
 - [ ] Vice
