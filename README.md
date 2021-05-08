@@ -5,33 +5,30 @@ results. Let's see who is the most positive and who is the most negative news.
 
 ## News Services
 
-So far we have
-- CNN
-- ABC
-- NBC
-- CBS
-- FOX
-- NPR
-- BBC
-- NYT
-- Politico
-- The Hill
-- The Guardian
+- [X] CNN
+- [X] ABC
+- [X] NBC
+- [X] CBS
+- [X] FOX
+- [X] NPR
+- [X] BBC
+- [X] NYT
+- [X] Politico
+- [X] The Hill
+- [X] The Guardian
+- [X] Slate
+- [X] The Blaze
+- [ ] Breitbart
+- [ ] US News
+- [ ] Telegraph
+- [ ] Vice
+- [ ] Vox
+- [ ] New Yorker
+- [ ] Daily Beast
+- [ ] Salon
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
 
-I want to get
-
-- Breitbart
-- Slate
-- The Blaze
-- US News
-- Telegraph
-- Vice
-- Vox
-- New Yorker
-- Daily Beast
-- Salon
 
 ## Notes
 

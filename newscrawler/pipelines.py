@@ -33,7 +33,6 @@ class NewscrawlerPipeline:
         article.compound = sid['compound']
 
         agency = Agency.query.filter_by(name=item['agency']).first()
-        logging.info(agency)
         if not agency:
             agency = Agency()
             agency.name = item['agency']
@@ -43,7 +42,6 @@ class NewscrawlerPipeline:
 
         article.agency = agency
 
-        logging.info(article)
 
         # calculate cumulative averages
         if created:
