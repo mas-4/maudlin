@@ -1,6 +1,7 @@
 from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
 from functools import reduce
+from newscrawler.utils import color, gradient
 
 def windowed_query(q, column, windowsize):
     """"Break a Query into chunks on a given column."""
@@ -66,19 +67,7 @@ class Article(Base):
 
     @property
     def color(self):
-        p = (self.sentiment*155) / 100
-        p += 100
-        p = abs(p)
-        n = abs(255-p)
-        p = format(int(p), 'x')
-        p = p.zfill(2)
-        n = format(int(n), 'x')
-        n = n.zfill(2)
-        if self.sentiment < 0:
-            color = f'{n}{p}00'
-        else:
-            color = f'{p}{n}00'
-        return color
+        return gradient(self.sentiment)
 
 
 class Agency(Base):
@@ -108,13 +97,4 @@ class Agency(Base):
 
     @property
     def color(self):
-        h = (self.cumulative_sentiment*155) / 100
-        h += 100
-        h = abs(h)
-        d = format(int(h), 'x')
-        d = d.zfill(2)
-        if self.cumulative_sentiment > 0:
-            color = f'00{d}00'
-        else:
-            color = f'{d}0000'
-        return color
+        return color(self.cumulative_sentiment)

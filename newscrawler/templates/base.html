@@ -9,11 +9,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <div>
+        <nav>
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('agencies') }}">Agencies</a>
-        </div>
-        <hr>
+        </nav>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <ul>

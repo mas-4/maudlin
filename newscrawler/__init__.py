@@ -4,6 +4,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from newscrawler.config import Config
+from newscrawler import utils
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -24,5 +25,7 @@ if not app.debug:
     app.logger.info(Config.SQLALCHEMY_DATABASE_URI)
 
 app.jinja_env.globals.update(len=len)
+app.jinja_env.globals.update(color=utils.color)
+app.jinja_env.globals.update(gradient=utils.gradient)
 
 from newscrawler import routes, models, errors
