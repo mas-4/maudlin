@@ -2,10 +2,12 @@
 
 {% block content %}
     <h1>Today's articles &times;{{ count }} (total &times;{{ dbcount }})</h1>
-    <h2>key: [sentiment, neutrality]</h2>
+    <h2 class="today" style="background-color: {{ color(overall, [-10, 10]) }};">Today's Sentiment: {{ overall }}%</h2>
+    <h2>key: [ sentiment (positive minus negative), neutrality, compound ]</h2>
     {% for agency in structure.keys() %}
         <h1 style="margin-top: 3rem; margin-bottom: 2rem;">
-            <span style="margin-right: 0.5rem; padding: 0.35rem 0.05rem 0 0.25rem; color: white; background-color: #{{ agency.color }}">
+            <span class="agencyname" style="background-color: #{{
+                color(clamp(agency.sent, -10, 10), [-10,10]) }}">
                 {{ agency.name.upper() }}
             </span>
             today &times;{{ len(structure[agency]) }}
@@ -20,7 +22,8 @@
                     <a style="padding: 0.25rem; color: white; background-color: #{{ article.color }}" href="{{ article.url }}">{{ article.title }}</a>
                     [
                     <span style="color: #{{ article.color }}">{{ article.sentiment }}%</span>,
-                    <span style="color: #{{ article.neutrality_color }}">{{ article.neutrality }}%</span>
+                    <span style="color: #{{ article.neutrality_color }}">{{ article.neutrality }}%</span>,
+                    <span style="color: #{{ article.compound_color }}">{{ article.comp }}%</span>
                     ]
                 </li>
             {% endfor %}

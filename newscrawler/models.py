@@ -66,6 +66,10 @@ class Article(Base):
         return round(self.neu * 100, 2)
 
     @property
+    def comp(self):
+        return round(self.compound * 100, 2)
+
+    @property
     def color(self):
         # expand the number
         num = clamp(self.sentiment, -25, 25)
@@ -76,6 +80,10 @@ class Article(Base):
         # expand the number
         num = clamp(self.neutrality, 70, 100)
         return color(num, [70,100], color1='808080', color2='0000FF')
+
+    @property
+    def compound_color(self):
+        return color(self.compound, [-100,100])
 
 
 class Agency(Base):

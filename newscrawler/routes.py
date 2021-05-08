@@ -1,4 +1,5 @@
 import math
+import statistics
 import io
 import string
 import time
@@ -42,8 +43,10 @@ def index():
         agency.sent = round(agency.sent, 2)
         agency.neut = round(agency.neut, 2)
         structure[agency].sort(key=lambda l: l.sentiment, reverse=True)
+    overall = round(statistics.mean([a.sentiment for a in articles]), 2)
     return render_template('index.html', count=len(articles),
-                           dbcount=Article.query.count(), structure=structure)
+                           dbcount=Article.query.count(),
+                           structure=structure, overall=overall)
 
 
 @app.route('/agencies')
