@@ -57,23 +57,30 @@ stopwords.extend(['say', 'said', 'news', 'app', 'says'])
 stopwords.extend([l for l in string.ascii_lowercase + string.ascii_uppercase])
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
+
     t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []
-    for article in agency.articles.filter(Article.date==date.today()):
+    articles = agency.articles.filter(Article.date==date.today()).all()
+    if not articles:
+        articles = agency.articles.order_by(Article.date.desc()).limit(15).all()
+
+    for article in articles:
         text.append(article.text)
     app.logger.info(f"{time.time()-t}s for generating text")
 
     t = time.time()
     wordcloud = WordCloud(
-        width=400, height=400, background_color='white',
-        stopwords=stopwords)\
+        width=200, height=113, background_color='white',
+        stopwords=stopwords, scale=5)\
         .generate(' '.join(text)).to_array()
+    app.logger.info(f"{time.time()-t}s for generating wordcloud")
 
+    t = time.time()
     img = Image.fromarray(wordcloud.astype('uint8'))
     file_object = io.BytesIO()
     img.save(file_object, 'PNG')
     file_object.seek(0)
-
     app.logger.info(f"{time.time()-t}s for generating image")
+
     return send_file(file_object, mimetype='image/png')

@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>{{ agency.name.upper() }}</h1>
-<img src="{{ url_for('agencywordcloud', agency=agency.name) }}"/>
+
 <h3>Statistics</h3>
 <ul>
     <li>Articles: &times;{{ agency.articles.count() }}</li>
@@ -10,6 +10,8 @@
     <li>Sentiment overall: {{ agency.cumulative_sentiment }}%</li>
     <li>Neutrality overall: {{ agency.cumulative_neutrality }}%</li>
 </ul>
+
+<img src="{{ url_for('agencywordcloud', agency=agency.name) }}"/>
 
 <h3>Last 100 articles</h3>
 <ol>
