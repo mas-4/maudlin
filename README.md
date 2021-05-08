@@ -5,12 +5,33 @@ results. Let's see who is the most positive and who is the most negative news.
 
 ## News Services
 
-- https://www.cnn.com/
-- https://www.bbc.com/
-- https://www.foxnews.com/
-- https://www.npr.org/
+So far we have
+- CNN
+- ABC
+- NBC
+- CBS
+- FOX
+- NPR
+- BBC
+- NYT
+- Politico
+- The Hill
+- The Guardian
 
-https://libguides.wlu.edu/c.php?g=357505&p=2412837
+I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
+
+I want to get
+
+- Breitbart
+- Slate
+- The Blaze
+- US News
+- Telegraph
+- Vice
+- Vox
+- New Yorker
+- Daily Beast
+- Salon
 
 ## Notes
 
@@ -34,12 +55,18 @@ within each article. This is sometimes easier than otherwise.
 The spider just gets the top articles for the day. I run it every hour with a
 crontab. This is sometimes easier than other times.
 
-Each site is different. I don't yet have a crawler for CNN or BBC. I think
-preference should be given to spiders.
+***UPDATE***: I've abandoned the crawlers. It's too processor intensive for a
+ras pi. We might change that down the road. But 15+ crawlers running
+continuously plus an hourly 15+ spiders is just too much.
 
 ## Dashboard
 
-I want to build a dashboard with visualization of positivity over time and
-current top stories and positivity rates. Also current word clouds. I'd like to
-data vizualize the news. This shouldn't be too difficult with flask and pandas
-and maybe d3.
+Dashboard is quite preliminary for now. The main page lists all of today's
+articles per news agency. This is going to end up being changed because it's too
+much content.
+
+Each agency page has some stats, the top most recent 100 articles, and a word
+cloud. I'm quite proud of the word cloud idea, I just wish it was faster. Might
+look into caching.
+
+I still want graphs over time.
