@@ -23,9 +23,9 @@ results. Let's see who is the most positive and who is the most negative news.
 - [X] Telegraph
 - [X] Vice
 - [X] Vox
-- [ ] New Yorker
-- [ ] Daily Beast
+- [X] Daily Beast
 - [ ] Salon
+- [ ] New Yorker
 - [ ] WaPo (probably pretty difficult)
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
