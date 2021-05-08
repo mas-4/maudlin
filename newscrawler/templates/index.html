@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Today's articles (&times;{{ count }})</h1>
-    <h2>Total in database &times;{{ dbcount }}</h2>
+    <h1>Today's articles &times;{{ count }} (total &times;{{ dbcount }})</h1>
     <h2>key: [sentiment, neutrality]</h2>
     {% for agency in structure.keys() %}
         <h1 style="margin-top: 3rem; margin-bottom: 2rem;">
-            <span style="margin-right: 0.5rem; padding: 0.25rem; color: white; background-color: #{{ agency.color }}">
+            <span style="margin-right: 0.5rem; padding: 0.35rem 0.05rem 0 0.25rem; color: white; background-color: #{{ agency.color }}">
                 {{ agency.name.upper() }}
             </span>
             today &times;{{ len(structure[agency]) }}
             [
             <span style="color: #{{ color(agency.sent) }}">{{ agency.sent }}%</span>,
-            <span style="color: #{{ color(agency.neut) }}">{{ agency.neut }}%</span>
+            <span style="color: #{{ color(clamp(agency.neut, 70,100), [70,100], color1='808080', color2='0000FF') }}">{{ agency.neut }}%</span>
             ]
         </h1>
         <ol style="list-style-type: none;">
@@ -20,8 +19,8 @@
                 <li style="margin: 1rem">
                     <a style="padding: 0.25rem; color: white; background-color: #{{ article.color }}" href="{{ article.url }}">{{ article.title }}</a>
                     [
-                    <span style="color: #{{ color(article.sentiment) }}">{{ article.sentiment }}%</span>,
-                    <span style="color: #{{ color(article.neutrality) }}">{{ article.neutrality }}%</span>
+                    <span style="color: #{{ article.color }}">{{ article.sentiment }}%</span>,
+                    <span style="color: #{{ article.neutrality_color }}">{{ article.neutrality }}%</span>
                     ]
                 </li>
             {% endfor %}

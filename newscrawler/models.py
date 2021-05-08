@@ -1,7 +1,7 @@
 from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
 from functools import reduce
-from newscrawler.utils import color, gradient
+from newscrawler.utils import color, refactor, clamp
 
 def windowed_query(q, column, windowsize):
     """"Break a Query into chunks on a given column."""
@@ -67,7 +67,15 @@ class Article(Base):
 
     @property
     def color(self):
-        return gradient(self.sentiment)
+        # expand the number
+        num = clamp(self.sentiment, -25, 25)
+        return color(num, [-25,25])
+
+    @property
+    def neutrality_color(self):
+        # expand the number
+        num = clamp(self.neutrality, 70, 100)
+        return color(num, [70,100], color1='808080', color2='0000FF')
 
 
 class Agency(Base):
@@ -97,4 +105,12 @@ class Agency(Base):
 
     @property
     def color(self):
-        return color(self.cumulative_sentiment)
+        # expand the number
+        num = clamp(self.cumulative_sentiment, -25, 25)
+        return color(num, [-25,25])
+
+    @property
+    def neutrality_color(self):
+        # expand the number
+        num = clamp(self.cumulative_neutrality, 70, 100)
+        return color(num, [70,100], color1='808080', color2='0000FF')

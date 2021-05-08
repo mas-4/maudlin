@@ -1,27 +1,20 @@
-def color(num):
-    h = (num*155) / 100
-    h += 100
-    h = abs(h)
-    d = format(int(h), 'x')
-    d = d.zfill(2)
-    if num > 0:
-        color = f'00{d}00'
-    else:
-        color = f'{d}0000'
-    return color
+def clamp(n, smallest, largest): return max(smallest, min(n, largest))
 
+def refactor(x, old, new):
+    """Just y=mx+b !"""
+    m = (new[1] - new[0]) / (old[1] - old[0])
+    b = new[0] - m * old[0]
+    return m * x  + b
 
-def gradient(num):
-    p = (num*155) / 100
-    p += 100
-    p = abs(p)
-    n = abs(255-p)
-    p = format(int(p), 'x')
-    p = p.zfill(2)
-    n = format(int(n), 'x')
-    n = n.zfill(2)
-    if num < 0:
-        color = f'{n}{p}00'
-    else:
-        color = f'{p}{n}00'
-    return color
+def interpolate(color1='FF0000', color2='00FF00', factor=0.5):
+    color1 = [int(color1[i:i+2], 16) for i in range(0, 6, 2)]
+    color2 = [int(color2[i:i+2], 16) for i in range(0, 6, 2)]
+    result = color1
+    for i in range(0, 3):
+        result[i] = round(result[i] + factor * (color2[i] - color1[i]));
+    result = [format(n, 'x').zfill(2) for n in result]
+    return ''.join(result)
+
+def color(num, r=[-100,100], color1='FF0000', color2='00FF00'):
+    c = interpolate(factor=refactor(num, r, [0,1]), color1=color1, color2=color2)
+    return c
