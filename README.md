@@ -19,13 +19,14 @@ results. Let's see who is the most positive and who is the most negative news.
 - [X] Slate
 - [X] The Blaze
 - [X] Breitbart
-- [ ] US News
-- [ ] Telegraph
+- [ ] US News (Requires headers, has a honey pot)
+- [X] Telegraph
 - [ ] Vice
 - [ ] Vox
 - [ ] New Yorker
 - [ ] Daily Beast
 - [ ] Salon
+- [ ] WaPo (probably pretty difficult)
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
 
