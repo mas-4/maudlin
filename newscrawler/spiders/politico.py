@@ -13,10 +13,13 @@ class PoliticoSpider(scrapy.Spider, BoilerPlateParser):
     start_urls = ['https://www.politico.com/']
     special = 'https://www.politico.com/news/'
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
         self.driver = webdriver.Chrome(options=chrome_options)
+        super().__init__(*args, **kwargs)
 
     def parse(self, response):
         self.driver.get(response.url)
