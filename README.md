@@ -22,7 +22,7 @@ results. Let's see who is the most positive and who is the most negative news.
 - [ ] US News (Requires headers, has a honey pot)
 - [X] Telegraph
 - [X] Vice
-- [ ] Vox
+- [X] Vox
 - [ ] New Yorker
 - [ ] Daily Beast
 - [ ] Salon
