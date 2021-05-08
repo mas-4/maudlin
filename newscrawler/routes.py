@@ -8,6 +8,10 @@ from newscrawler import app, db
 from newscrawler.models import Agency, Article
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
+import nltk
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 
 def average(agency, sent, neut):
@@ -62,12 +66,19 @@ def agency(agency):
 
 
 stopwords = list(STOPWORDS)
-stopwords.extend(['say', 'said', 'says']) # clean some default words
+# clean some default words
+stopwords.extend(['say', 'said', 'says', "n't", 'Mr', 'Ms', 'Mrs'])
 # strip stray letters
 stopwords.extend([l for l in string.ascii_lowercase + string.ascii_uppercase])
+# Parts of Speech to keep
+POS = [
+    'FW', 'JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'RB',
+    'RBR', 'RBS', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VNP', 'VBZ']
 
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
+
+    # Make text
     t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []
@@ -77,15 +88,25 @@ def agencywordcloud(agency):
 
     for article in articles:
         text.append(article.text)
+    text = ' '.join(text)
+    tokenized = nltk.word_tokenize(text)
+    tokenized = nltk.pos_tag(tokenized)
+    text = []
+    for token in tokenized:
+        if token[1] in POS:
+            text.append(token[0])
+    text = ' '.join(text)
     app.logger.info(f"{time.time()-t}s for generating text")
 
+    # Make wordcloud
     t = time.time()
     wordcloud = WordCloud(
         width=200, height=113, background_color='white',
         stopwords=stopwords, scale=5)\
-        .generate(' '.join(text)).to_array()
+        .generate(text).to_array()
     app.logger.info(f"{time.time()-t}s for generating wordcloud")
 
+    # Make image
     t = time.time()
     img = Image.fromarray(wordcloud.astype('uint8'))
     file_object = io.BytesIO()
