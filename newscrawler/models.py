@@ -3,6 +3,11 @@ from sqlalchemy.ext.declarative import declared_attr
 from functools import reduce
 from newscrawler.utils import color, refactor, clamp
 
+def average(prev_avg, x, n):
+    return ((prev_avg *
+             n + x) /
+            (n + 1));
+
 def windowed_query(q, column, windowsize):
     """"Break a Query into chunks on a given column."""
 
@@ -105,12 +110,6 @@ class Agency(Base):
     def cumulative_neutrality(self):
         return round(self.cum_neut*100, 2)
 
-    def reaccumulate(self):
-        cumsum = sum(a.pos-a.neg for a in self.articles)
-        self.cum_sent = cumsum / self.articles.count()
-        cumsum = sum(a.neu for a in self.articles)
-        self.cum_neut = cumsum / self.articles.count()
-
     @property
     def color(self):
         # expand the number
@@ -122,3 +121,11 @@ class Agency(Base):
         # expand the number
         num = clamp(self.cumulative_neutrality, 70, 100)
         return color(num, [70,100], color1='808080', color2='0000FF')
+
+    def reaccumulate(self):
+        self.cum_sent = 0
+        for i, a in enumerate(windowed_query(self.articles, Article.sent, 1000)):
+            self.cum_sent = average(self.cum_sent, a.sent, i+1)
+        self.cum_neut = 0
+        for i, a in enumerate(windowed_query(self.articles, Article.neu, 1000)):
+            self.cum_neut = average(self.cum_neut, a.neu, i+1)
