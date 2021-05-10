@@ -3,8 +3,9 @@ import statistics
 import io
 import string
 import time
+import requests as rq
 from datetime import date
-from flask import render_template, send_file, request, url_for
+from flask import render_template, send_file, request, url_for, current_app
 from sqlalchemy import func
 from newscrawler import app, db
 from newscrawler.models import Agency, Article
@@ -31,13 +32,21 @@ def index():
     """Generates an index of today's articles, sorted by sentiment, colored by
     sentiment.
     """
+    jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
+    app.logger.info(jobs)
+    app.logger.info(jobs.url)
+    try:
+        jobs = jobs.json()
+        app.logger.info(jobs)
+    except:
+        jobs = {'running': []}
     agencies = Agency.query.all()
     return render_template(
         'index.html',
         count=Article.query.filter(Article.date==date.today()).count(),
         dbcount=Article.query.count(),
         agencies=agencies,
-        overall=Article.todays_sentiment())
+        overall=Article.todays_sentiment(), running=jobs['running'])
 
 
 @app.route('/agencies')
