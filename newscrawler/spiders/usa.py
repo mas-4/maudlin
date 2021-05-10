@@ -23,7 +23,7 @@ class UsaSpider(scrapy.Spider, BoilerPlateParser):
             byline = soup.find(attrs={'class': re.compile('gnt_ar_by')})
             if not byline:
                 byline = soup.find(attrs={'class': re.compile('topper__byline')})
-            item['byline'] = byline.text.strip()
+            item['byline'] = byline.text.strip() if byline else None
 
             date = soup.find('time')
             if date:
@@ -46,10 +46,8 @@ class UsaSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            root = soup.find('main', class_='gnt_cw')
-            links = root.find_all('a')
+            href = re.compile('/\d{4}/\d{2}/\d{2}/')
+            links = set(a['href'] for a in soup.find_all('a', attrs={'href': href}))
             for link in links:
-                try:
-                    yield response.follow(link['href'], callback=self.parse)
-                except:
-                    continue
+                if 'picture-gallery' not in link:
+                    yield response.follow(link, callback=self.parse)
