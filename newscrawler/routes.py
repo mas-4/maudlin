@@ -32,31 +32,38 @@ def index():
                      .filter(Article.date==date.today()).group_by(Agency.id)
                      .order_by(db.func.count(Article.id).desc())),
     }
-    t = timing(t, "getting sorts")
+    page = request.args.get('page', default=1)
+    try:
+        page = int(page)
+    except:
+        abort(404)
+    PER_PAGE = 5
+    pages = list(range(1, math.ceil(Agency.query.count() / PER_PAGE)))
+    t = timing(t, "getting sorts and pages")
+
     jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
-    t = timing(t, "getting jobs")
     try:
         jobs = jobs.json()
     except Exception as e:
         app.logger.info(e)
         jobs = {'running': []}
-    t = timing(t, "parsing json")
+    t = timing(t, "getting jobs")
+
     try:
-        agencies = sorts[sort].all()
+        agencies = sorts[sort].paginate(page, PER_PAGE)
     except KeyError:
         abort(404)
     t = timing(t, "getting articles")
-    count = Article.query.filter(Article.date==date.today()).count()
-    dbcount = Article.query.count()
-    t = timing(t, "getting counts")
-    overall=Article.todays_sentiment()
-    t = timing(t, "getting todays_sentiment")
-    temp = render_template(
-        'index.html', count=count, dbcount=dbcount,
-        agencies=agencies, sorts=sorts, overall=overall, sort=sort,
-        running=jobs['running'])
+
+    html = render_template(
+        'index.html',
+        count=Article.query.filter(Article.date==date.today()).count(),
+        dbcount=Article.query.count(),
+        agencies=agencies.items,
+        sorts=sorts, sort=sort, pages=pages, page=page,
+        overall=Article.todays_sentiment(), running=jobs['running'])
     timing(t, "rendering template")
-    return temp
+    return html
 
 
 @app.route('/agencies')
@@ -134,7 +141,11 @@ def agencywordcloud(agency):
 @app.route('/articles')
 def articles():
     """A table of all articles"""
-    page = int(request.args.get('page', default='1'))
+    page = request.args.get('page', default='1')
+    try:
+        page = int(page)
+    except:
+        abort(404)
     sort = request.args.get('sort', default='date')
     direction = request.args.get('direction', default='asc')
     per_page = int(request.args.get('per_page', default='50'))
@@ -148,7 +159,7 @@ def articles():
         'neu': Article.neu,
         'compound': Article.compound,
     }
-    pages = list(range(1, math.ceil(Article.query.count() / 50)))
+    pages = list(range(1, math.ceil(Article.query.count() / per_page)))
     arts = Article.query\
         .order_by(getattr(sorts[sort], direction, 'asc')())\
         .filter(Article.agency!=None)\

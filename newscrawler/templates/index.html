@@ -11,10 +11,16 @@
     {% endfor %}
     </ul>
     {% endif %}
-    <div>
+    <div class="pagination">
         Sort by:
         {% for s in sorts %}
             <a {% if sort==s %}class="active"{% endif %} style="margin-left: 1rem;" href="{{ url_for('index', sort=s) }}">{{ s }}</a>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        Pages:
+        {% for p in pages %}
+            <a href="{{ url_for('index', page=p, sort=sort) }}" {% if page == p %}class="active"{% endif %}>{{ p }}</a>
         {% endfor %}
     </div>
     <p>key: [ <b>sentiment</b> (positive minus negative), <b>neutrality</b>, <b>compound</b> ]</p>
@@ -41,4 +47,10 @@
             {% endfor %}
         </ol>
     {% endfor %}
+    <div class="pagination">
+        Pages:
+        {% for p in pages %}
+            <a href="{{ url_for('index', page=p, sort=sort) }}" {% if page == p %}class="active"{% endif %}>{{ p }}</a>
+        {% endfor %}
+    </div>
 {% endblock %}
