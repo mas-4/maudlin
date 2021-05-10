@@ -26,7 +26,7 @@ class NytSpider(scrapy.Spider, BoilerPlateParser):
                 story = soup.find('article', class_='live-blog-content')
             paragraphs = story.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
 
             yield item
 

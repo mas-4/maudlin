@@ -1,10 +1,6 @@
-import logging
 import scrapy
 from dateutil import parser
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import Rule, CrawlSpider
 from bs4 import BeautifulSoup as BS
-
 from newscrawler.mixins import BoilerPlateParser
 
 CLASS = 'paragraphs-container'

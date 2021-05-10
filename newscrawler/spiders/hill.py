@@ -1,6 +1,4 @@
-import re
 import scrapy
-from datetime import date as dt
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
 from newscrawler.mixins import BoilerPlateParser
@@ -27,7 +25,7 @@ class HillSpider(scrapy.Spider, BoilerPlateParser):
             story = soup.find('div', attrs={'class': 'field-item'})
             paragraphs = story.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
 
             yield item
 

@@ -28,7 +28,7 @@ class GuardianSpider(scrapy.Spider, BoilerPlateParser):
             story = soup.find('div', attrs={'class': re.compile('article-body')})
             paragraphs = story.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
 
             yield item
 

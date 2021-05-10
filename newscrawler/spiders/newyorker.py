@@ -30,7 +30,7 @@ class NewyorkerSpider(scrapy.Spider, BoilerPlateParser):
             article = soup.find('div', class_='article__body')
             paragraphs = article.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
             yield item
 
         if response.url == self.start_urls[0]:

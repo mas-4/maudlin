@@ -24,7 +24,7 @@ class NbcSpider(scrapy.Spider, BoilerPlateParser):
             story = soup.find('div', class_='article-body__content')
             paragraphs = story.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
 
             yield item
 

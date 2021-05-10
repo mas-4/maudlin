@@ -41,7 +41,7 @@ class UsaSpider(scrapy.Spider, BoilerPlateParser):
                 story = soup.find('section', class_='in-depth-content')
             paragraphs = story.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
 
             yield item
 

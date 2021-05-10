@@ -1,4 +1,3 @@
-import logging
 import scrapy
 from dateutil import parser
 from scrapy.linkextractors import LinkExtractor
