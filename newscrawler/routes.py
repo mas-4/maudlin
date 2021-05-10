@@ -40,7 +40,7 @@ def index():
     except:
         abort(404)
     PER_PAGE = 5
-    pages = list(range(1, math.ceil(Agency.query.count() / PER_PAGE)))
+    pages = list(range(1, math.ceil(Agency.query.count() / PER_PAGE)+1))
     t = timing(t, "getting sorts and pages")
 
     jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
@@ -161,7 +161,7 @@ def articles():
         'neu': Article.neu,
         'compound': Article.compound,
     }
-    pages = list(range(1, math.ceil(Article.query.count() / per_page)))
+    pages = list(range(1, math.ceil(Article.query.count() / per_page)+1))
     arts = Article.query\
         .order_by(getattr(sorts[sort], direction, 'asc')())\
         .filter(Article.agency!=None)\
