@@ -1,5 +1,5 @@
 from itemadapter import ItemAdapter
-from newscrawler.models import Article, Agency
+from newscrawler.models import Article, Agency, average
 from newscrawler import db
 import logging
 
@@ -12,20 +12,26 @@ class NewscrawlerPipeline:
         self.sid = SentimentIntensityAnalyzer()
 
     def process_item(self, item, spider):
+        # check if the article exists by its url or its title. Still might get
+        # dupes. Breitbart uses different urls for the same article, and
+        # sometimes agencies change the title over time.
         article = (Article.query.filter(Article.url==item['url']).first() or
                    Article.query.filter(Article.title==item['title']).first())
         created = False
+
         if not article:
             # article doesn't exist, create it
             article = Article()
             created = True
 
+        # article data
         article.title = item['title']
         article.url = item['url']
         article.byline = item['byline']
         article.date = item['date']
         article.text = item['text']
 
+        # sentiment data
         sid = self.sid.polarity_scores(article.text)
         article.pos = sid['pos']
         article.neg = sid['neg']
@@ -38,17 +44,21 @@ class NewscrawlerPipeline:
             agency = Agency()
             agency.name = item['agency']
             agency.homepage = item['start']
-            agency.cum_sent = 0.0
-            agency.cum_neut = 0.0
+            # because it's a running average the first data point is just this
+            # article.
+            agency.cum_sent = article.sent
+            agency.cum_neut = article.neu
 
         article.agency = agency
-
 
         # calculate cumulative averages
         if created:
             sent = article.pos - article.neg
-            agency.cum_sent += (sent - agency.cum_sent) / agency.articles.count()
-            agency.cum_neut += (article.neu - agency.cum_neut) / agency.articles.count()
+            # special streaming average method I found on the internet and
+            # can't find now
+            count = agency.articles.count()
+            agency.cum_sent = average(agency.cum_sent, sent, count)
+            agency.cum_neut = average(agency.cum_neut, article.neu, count)
 
         try:
             if created:
