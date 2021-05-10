@@ -3,33 +3,14 @@ from scrapy import signals
 from time import sleep
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
-from newscrawler.mixins import BoilerPlateParser
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from newscrawler.mixins import BoilerPlateParser, SeleniumMixin
 
 
-class PoliticoSpider(scrapy.Spider, BoilerPlateParser):
+class PoliticoSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):
     name = 'politico'
     allowed_domains = ['www.politico.com']
     start_urls = ['https://www.politico.com/']
     special = 'https://www.politico.com/news/'
-
-    @classmethod
-    def from_crawler(cls, crawler, *args, **kwargs):
-        spider = super().from_crawler(crawler, *args, **kwargs)
-        crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
-        crawler.signals.connect(spider.spider_opened, signal=signals.spider_opened)
-        return spider
-
-    def spider_opened(self):
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        self.driver = webdriver.Chrome(options=chrome_options)
-
-    def spider_closed(self):
-        self.driver.close()
 
     def parse(self, response):
         self.driver.get(response.url)
