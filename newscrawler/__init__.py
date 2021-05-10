@@ -1,13 +1,11 @@
 import os, logging
 from logging.handlers import RotatingFileHandler
-from dotenv import load_dotenv
 from flask import Flask
 from flaskext.markdown import Markdown
 from flask_sqlalchemy import SQLAlchemy
 from newscrawler.config import Config
 from newscrawler import utils
 
-load_dotenv()
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
