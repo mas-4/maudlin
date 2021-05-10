@@ -2,8 +2,8 @@
 {% block content %}
     <div>
         Sort by:
-        {% for sort in sorts %}
-            <a style="margin-left: 1rem;" href="{{ url_for('agencies', sort=sort) }}">{{ sort }}</a>
+        {% for s in sorts %}
+            <a {% if sort==s %}class="active"{% endif %} style="margin-left: 1rem;" href="{{ url_for('agencies', sort=s) }}">{{ s }}</a>
         {% endfor %}
     </div>
     <ul class="cards">

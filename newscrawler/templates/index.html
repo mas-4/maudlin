@@ -11,7 +11,13 @@
     {% endfor %}
     </ul>
     {% endif %}
-    <h2>key: [ sentiment (positive minus negative), neutrality, compound ]</h2>
+    <div>
+        Sort by:
+        {% for s in sorts %}
+            <a {% if sort==s %}class="active"{% endif %} style="margin-left: 1rem;" href="{{ url_for('index', sort=s) }}">{{ s }}</a>
+        {% endfor %}
+    </div>
+    <p>key: [ <b>sentiment</b> (positive minus negative), <b>neutrality</b>, <b>compound</b> ]</p>
     {% for agency in agencies %}
         <h1 style="margin-top: 3rem; margin-bottom: 2rem;">
             <span class="agencyname" style="background-color: #{{ color(clamp(agency.todays_sentiment, -10, 10), [-10,10]) }}"> {{ agency.name.upper() }}

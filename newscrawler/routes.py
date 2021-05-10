@@ -1,12 +1,7 @@
-import math
-import statistics
-import io
-import string
-import time
+import math, io, string, time
 import requests as rq
 from datetime import date
-from flask import render_template, send_file, request, url_for, current_app
-from sqlalchemy import func
+from flask import render_template, send_file, request, current_app, abort
 from newscrawler import app, db
 from newscrawler.models import Agency, Article
 from wordcloud import WordCloud, STOPWORDS
@@ -32,20 +27,28 @@ def index():
     """Generates an index of today's articles, sorted by sentiment, colored by
     sentiment.
     """
+    sort = request.args.get('sort', default='Name')
+    sorts = {
+        'Name': Agency.query.order_by(Agency.name),
+        'Articles': (Agency.query.join(Article)
+                     .filter(Article.date==date.today()).group_by(Agency.id)
+                     .order_by(db.func.count(Article.id).desc())),
+    }
     jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
-    app.logger.info(jobs)
-    app.logger.info(jobs.url)
     try:
         jobs = jobs.json()
         app.logger.info(jobs)
     except:
         jobs = {'running': []}
-    agencies = Agency.query.all()
+    try:
+        agencies = sorts[sort].all()
+    except KeyError:
+        abort(404)
     return render_template(
         'index.html',
         count=Article.query.filter(Article.date==date.today()).count(),
-        dbcount=Article.query.count(),
-        agencies=agencies,
+        dbcount=Article.query.count(), agencies=agencies,
+        sorts=sorts, sort=sort,
         overall=Article.todays_sentiment(), running=jobs['running'])
 
 
@@ -60,7 +63,8 @@ def agencies():
                         .order_by(db.func.count(Article.id).desc())),
     }
     agencies = sorts[sort].all()
-    return render_template('agencies.html', agencies=agencies, sorts=sorts.keys())
+    return render_template('agencies.html', agencies=agencies,
+                           sorts=sorts.keys(), sort=sort)
 
 
 @app.route('/agency/<agency>')
