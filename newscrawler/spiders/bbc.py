@@ -1,3 +1,4 @@
+import re
 import scrapy
 from bs4 import BeautifulSoup as BS
 from newscrawler.mixins import BoilerPlateParser
@@ -7,7 +8,7 @@ from dateutil import parser
 class BbcSpider(scrapy.Spider, BoilerPlateParser):
     name = 'bbc'
     allowed_domains = ['bbc.com', 'bbc.co.uk']
-    start_urls = ['http://feeds.bbci.co.uk/news/rss.xml']
+    start_urls = ['https://www.bbc.com']
 
     def parse(self, response):
         soup = BS(response.text, 'lxml')
@@ -29,5 +30,7 @@ class BbcSpider(scrapy.Spider, BoilerPlateParser):
                 yield item
 
         if response.url == self.start_urls[0]:
-            for a in soup.find_all('guid'):
-                yield response.follow(a.text, callback=self.parse)
+            attrs={'href': re.compile('/news/.*-\d+$')}
+            links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
+            for link in links:
+                yield response.follow(link, callback=self.parse)
