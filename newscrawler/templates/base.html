@@ -13,6 +13,8 @@
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('agencies') }}">Agencies</a>
             <a href="{{ url_for('articles') }}">Articles</a>
+            <a href="{{ url_for('docs', doc='about') }}">About</a>
+            <a href="{{ url_for('docs', doc='roadmap') }}">Roadmap</a>
         </nav>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

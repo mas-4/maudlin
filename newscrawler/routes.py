@@ -1,4 +1,4 @@
-import math, io, string, time
+import math, io, string, time, os
 import requests as rq
 from datetime import date
 from flask import render_template, send_file, request, current_app, abort
@@ -169,3 +169,14 @@ def articles():
     return render_template('articles.html', articles=arts.items, pages=pages,
                            sort=sort, page=page, direction=direction,
                            per_page=per_page, per_pages=per_pages)
+
+@app.route('/docs/<doc>')
+def docs(doc):
+    """Get a static document and serve it."""
+    root = 'static/docs/'
+    path = root + doc + '.md'
+    try:
+        f = app.open_resource(path, mode='rt').read()
+    except:
+        abort(404)
+    return render_template('docs.html', doc=f)

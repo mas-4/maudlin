@@ -2,6 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 from flask import Flask
+from flaskext.markdown import Markdown
 from flask_sqlalchemy import SQLAlchemy
 from newscrawler.config import Config
 from newscrawler import utils
@@ -9,6 +10,11 @@ from newscrawler import utils
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+md = Markdown(app,
+              extensions=['footnotes'],
+#              extension_configs={'footnotes': ('PLACE_MARKER','~~~~~~~~')},
+              safe_mode=True,
+              output_format='html4')
 
 if not app.debug:
     if not os.path.exists('logs'):
