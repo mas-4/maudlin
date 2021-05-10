@@ -1,5 +1,6 @@
 import scrapy
 import re
+from scrapy import signals
 from time import sleep
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -13,13 +14,22 @@ class DailybeastSpider(scrapy.Spider, BoilerPlateParser):
     allowed_domains = ['www.thedailybeast.com']
     start_urls = ['https://www.thedailybeast.com/']
 
-    def __init__(self, *args, **kwargs):
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = super().from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
+        crawler.signals.connect(spider.spider_opened, signal=signals.spider_opened)
+        return spider
+
+    def spider_opened(self):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         self.driver = webdriver.Chrome(options=chrome_options)
-        super().__init__(*args, **kwargs)
+
+    def spider_closed(self):
+        self.driver.close()
 
     def parse(self, response):
         soup = BS(response.text, 'lxml')

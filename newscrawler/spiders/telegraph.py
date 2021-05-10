@@ -17,12 +17,13 @@ class TelegraphSpider(scrapy.Spider, BoilerPlateParser):
 
             item['title'] = soup.find('h1', {'itemprop': re.compile(r'headline')}).text.strip()
 
-            if byline := soup.find('span', attrs={'data-test': 'author-name'}):
+            item['byline'] = None
+            byline = soup.find('span', attrs={'data-test': 'author-name'})
+            if byline:
                 item['byline'] = byline['content']
-            elif byline := soup.find('div', class_='byline'):
-                item['byline'] = byline.text.strip()
-            else:
-                item['byline'] = None
+            if not item['byline']:
+                soup.find('div', class_='byline')
+                item['byline'] = byline.text.strip() if byline else None
 
             date = soup.find('time')['datetime']
             date = parser.parse(date)
