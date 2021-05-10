@@ -1,7 +1,8 @@
+from datetime import date
+from statistics import mean
 from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
-from functools import reduce
-from newscrawler.utils import color, refactor, clamp
+from newscrawler.utils import color, clamp
 
 def average(prev_avg, x, n):
     return ((prev_avg *
@@ -90,6 +91,11 @@ class Article(Base):
     def compound_color(self):
         return color(self.compound, [-100,100])
 
+    @staticmethod
+    def todays_sentiment():
+        articles = Article.query.filter(Article.date==date.today()).all()
+        return round(mean([a.sent for a in articles])*100, 2)
+
 
 class Agency(Base):
     __tablename__ = 'agency'
@@ -121,6 +127,29 @@ class Agency(Base):
         # expand the number
         num = clamp(self.cumulative_neutrality, 70, 100)
         return color(num, [70,100], color1='808080', color2='0000FF')
+
+    @property
+    def todays_articles(self):
+        return self.articles.filter(Article.date==date.today())\
+            .order_by(Article.sent.desc()).all()
+
+    @property
+    def todays_sentiment(self):
+        try:
+            return round(mean([a.sent for a in self.todays_articles])*100, 2)
+        except:
+            return 0.0
+
+    @property
+    def todays_neutrality(self):
+        try:
+            return round(mean([a.neu for a in self.todays_articles])*100, 2)
+        except:
+            return 0.0
+
+    @property
+    def todays_count(self):
+        return self.articles.filter(Article.date==date.today()).count()
 
     def reaccumulate(self):
         self.cum_sent = 0

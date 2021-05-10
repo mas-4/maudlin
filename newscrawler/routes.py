@@ -31,22 +31,13 @@ def index():
     """Generates an index of today's articles, sorted by sentiment, colored by
     sentiment.
     """
-    articles = Article.query.filter(Article.date==date.today()).all()
-    structure = {}
-    for article in articles:
-        average(article.agency, article.sentiment, article.neutrality)
-        if article.agency in structure:
-            structure[article.agency].append(article)
-        else:
-            structure[article.agency] = [article]
-    for agency in structure.keys():
-        agency.sent = round(agency.sent, 2)
-        agency.neut = round(agency.neut, 2)
-        structure[agency].sort(key=lambda l: l.sentiment, reverse=True)
-    overall = round(statistics.mean([a.sentiment for a in articles]), 2)
-    return render_template('index.html', count=len(articles),
-                           dbcount=Article.query.count(),
-                           structure=structure, overall=overall)
+    agencies = Agency.query.all()
+    return render_template(
+        'index.html',
+        count=Article.query.filter(Article.date==date.today()).count(),
+        dbcount=Article.query.count(),
+        agencies=agencies,
+        overall=Article.todays_sentiment())
 
 
 @app.route('/agencies')
