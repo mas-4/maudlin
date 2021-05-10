@@ -12,7 +12,7 @@ class NewscrawlerPipeline:
         self.sid = SentimentIntensityAnalyzer()
 
     def process_item(self, item, spider):
-        article = Article.query.filter(Article.title==item['title']).first()
+        article = Article.query.filter(Article.url==item['url']).first()
         created = False
         if not article:
             # article doesn't exist, create it
