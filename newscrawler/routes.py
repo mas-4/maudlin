@@ -37,8 +37,8 @@ def index():
     jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
     try:
         jobs = jobs.json()
-        app.logger.info(jobs)
-    except:
+    except Exception as e:
+        app.logger.info(e)
         jobs = {'running': []}
     try:
         agencies = sorts[sort].all()
