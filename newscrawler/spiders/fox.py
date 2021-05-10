@@ -29,6 +29,8 @@ class FoxSpider(scrapy.Spider, BoilerPlateParser):
                 return None
 
             paragraphs = text.find_all('p')
+            # filter out ad paragraphs, which are always all caps
+            paragraphs = list(filter(lambda l: l.text.strip().upper() != l.text.strip(), paragraphs))
             text = self.joinparagraphs(paragraphs)
 
             # replace nbsp
