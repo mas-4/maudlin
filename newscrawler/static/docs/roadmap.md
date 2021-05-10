@@ -26,12 +26,11 @@
 - [ ] US News: Requires headers, has a honey pot
 - [ ] Daily Mail: 403s even with headers on all subpages; Can't really use
   selenium unless I figure out the 403 problem or how to handle requests myself
+- [ ] Foreign Affairs: Paywall
 - [ ] Newsweek: 403
 - [ ] Washington Monthly
-- [ ] Foreign Policy
-- [ ] Foreign Affairs
-- [ ] Punchbowl
-- [ ] MSNBC
+- [X] Foreign Policy
+- [X] MSNBC
 - [ ] The Intercept
 - [ ] Vanity Fair
 - [ ] Tampa Bay Times
