@@ -1,3 +1,4 @@
+import re
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -14,8 +15,14 @@ class TelegraphSpider(scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('h1', {'itemprop': 'headline'}).text.strip()
-            item['byline'] = soup.find('span', attrs={'data-test': 'author-name'})['content']
+            item['title'] = soup.find('h1', {'itemprop': re.compile(r'headline')}).text.strip()
+
+            if byline := soup.find('span', attrs={'data-test': 'author-name'}):
+                item['byline'] = byline['content']
+            elif byline := soup.find('div', class_='byline'):
+                item['byline'] = byline.text.strip()
+            else:
+                item['byline'] = None
 
             date = soup.find('time')['datetime']
             date = parser.parse(date)
@@ -28,7 +35,7 @@ class TelegraphSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            attrs={'class': 'list-headline__link'}
-            links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
+            href = re.compile('/\d{4}/\d{2}/\d{2}/')
+            links = set(a['href'] for a in soup.find_all('a', attrs={'href': href}))
             for link in links:
                 yield response.follow(link, callback=self.parse)
