@@ -11,15 +11,10 @@ import nltk
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
-
-def average(agency, sent, neut):
-    """Create a cumulative average for all articles to a given agency."""
-    if not hasattr(agency, 'count'):
-        agency.count = 1
-        agency.sent = 0
-        agency.neut = 0
-    agency.sent += (sent - agency.sent) / agency.count
-    agency.neut += (neut - agency.neut) / agency.count
+def timing(t, task):
+    now = time.time()
+    app.logger.info(f"{now-t} for {task}.")
+    return now
 
 
 @app.route('/')
@@ -27,6 +22,7 @@ def index():
     """Generates an index of today's articles, sorted by sentiment, colored by
     sentiment.
     """
+    t = time.time()
     sort = request.args.get('sort', default='Name')
     sorts = {
         'Name': Agency.query.order_by(Agency.name),
@@ -34,22 +30,31 @@ def index():
                      .filter(Article.date==date.today()).group_by(Agency.id)
                      .order_by(db.func.count(Article.id).desc())),
     }
+    t = timing(t, "getting sorts")
     jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
+    t = timing(t, "getting jobs")
     try:
         jobs = jobs.json()
     except Exception as e:
         app.logger.info(e)
         jobs = {'running': []}
+    t = timing(t, "parsing json")
     try:
         agencies = sorts[sort].all()
     except KeyError:
         abort(404)
-    return render_template(
-        'index.html',
-        count=Article.query.filter(Article.date==date.today()).count(),
-        dbcount=Article.query.count(), agencies=agencies,
-        sorts=sorts, sort=sort,
-        overall=Article.todays_sentiment(), running=jobs['running'])
+    t = timing(t, "getting articles")
+    count = Article.query.filter(Article.date==date.today()).count()
+    dbcount = Article.query.count()
+    t = timing(t, "getting counts")
+    overall=Article.todays_sentiment()
+    t = timing(t, "getting todays_sentiment")
+    temp = render_template(
+        'index.html', count=count, dbcount=dbcount,
+        agencies=agencies, sorts=sorts, overall=overall, sort=sort,
+        running=jobs['running'])
+    timing(t, "rendering template")
+    return temp
 
 
 @app.route('/agencies')
@@ -85,8 +90,6 @@ POS = [
 
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
-
-    # Make text
     t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []
@@ -104,23 +107,21 @@ def agencywordcloud(agency):
         if token[1] in POS:
             text.append(token[0])
     text = ' '.join(text)
-    app.logger.info(f"{time.time()-t}s for generating text")
+    t = timing(t, "generating texts")
 
     # Make wordcloud
-    t = time.time()
     wordcloud = WordCloud(
         width=200, height=113, background_color='white',
         stopwords=stopwords, scale=5)\
         .generate(text).to_array()
-    app.logger.info(f"{time.time()-t}s for generating wordcloud")
+    t = timing(t, "generating wordcloud")
 
     # Make image
-    t = time.time()
     img = Image.fromarray(wordcloud.astype('uint8'))
     file_object = io.BytesIO()
     img.save(file_object, 'PNG')
     file_object.seek(0)
-    app.logger.info(f"{time.time()-t}s for generating image")
+    timing(t, "generating image")
 
     return send_file(file_object, mimetype='image/png')
 
