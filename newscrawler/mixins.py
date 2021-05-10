@@ -13,5 +13,5 @@ class BoilerPlateParser:
         for p in paragraphs:
             text.append(p.text.strip())
         text = list(filter(lambda l: l.strip(), text))
-        return '\n\n'.join(text)
+        return '\n\n'.join(text).replace('\xa0', ' ')
 
