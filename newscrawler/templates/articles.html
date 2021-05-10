@@ -20,19 +20,19 @@
             <tr>
                 <th>Agency</th>
                 {# title #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='title', direction='asc' if direction=='desc' else 'desc') }}">Title</a></th>
+                <th {% if sort=='title' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='title', direction='asc' if direction=='desc' else 'desc') }}">Title</a></th>
                 {# date #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='date', direction='asc' if direction=='desc' else 'desc') }}">Date</a></th>
+                <th {% if sort=='date' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='date', direction='asc' if direction=='desc' else 'desc') }}">Date</a></th>
                 {# byline #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='byline', direction='asc' if direction=='desc' else 'desc') }}">Byline</a></th>
+                <th {% if sort=='byline' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='byline', direction='asc' if direction=='desc' else 'desc') }}">Byline</a></th>
                 {# pos #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='pos', direction='asc' if direction=='desc' else 'desc') }}">Positive</a></th>
+                <th {% if sort=='pos' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='pos', direction='asc' if direction=='desc' else 'desc') }}">Positive</a></th>
                 {# neg #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='neg', direction='asc' if direction=='desc' else 'desc') }}">Negative</a></th>
+                <th {% if sort=='neg' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='neg', direction='asc' if direction=='desc' else 'desc') }}">Negative</a></th>
                 {# neu #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='neu', direction='asc' if direction=='desc' else 'desc') }}">Neutral</a></th>
+                <th {% if sort=='neu' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='neu', direction='asc' if direction=='desc' else 'desc') }}">Neutral</a></th>
                 {# compound #}
-                <th><a href="{{ url_for('articles', per_page=per_page, sort='compound', direction='asc' if direction=='desc' else 'desc') }}">Compound</a></th>
+                <th {% if sort=='compound' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='compound', direction='asc' if direction=='desc' else 'desc') }}">Compound</a></th>
                 <th>Sentiment</th>
             </tr>
         </thead>
