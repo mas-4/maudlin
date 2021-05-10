@@ -11,7 +11,9 @@ import nltk
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
+
 def timing(t, task):
+    """Helper function for timing tasks"""
     now = time.time()
     app.logger.info(f"{now-t} for {task}.")
     return now
@@ -59,6 +61,7 @@ def index():
 
 @app.route('/agencies')
 def agencies():
+    """List of all agencies"""
     sort = request.args.get('sort', default='Name')
     sorts = {
         'Name': Agency.query.order_by(Agency.name),
@@ -74,6 +77,7 @@ def agencies():
 
 @app.route('/agency/<agency>')
 def agency(agency):
+    """Data for a particular agency"""
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     return render_template('agency.html', agency=agency, Article=Article)
 
@@ -90,6 +94,7 @@ POS = [
 
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
+    """Generate a wordcloud for today's articles, or the last 15 articles"""
     t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []
@@ -128,6 +133,7 @@ def agencywordcloud(agency):
 
 @app.route('/articles')
 def articles():
+    """A table of all articles"""
     page = int(request.args.get('page', default='1'))
     sort = request.args.get('sort', default='date')
     direction = request.args.get('direction', default='asc')
