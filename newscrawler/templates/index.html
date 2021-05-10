@@ -26,8 +26,11 @@
     <p>key: [ <b>sentiment</b> (positive minus negative), <b>neutrality</b>, <b>compound</b> ]</p>
     {% for agency in agencies %}
         <h1 style="margin-top: 3rem; margin-bottom: 2rem;">
-            <span class="agencyname" style="background-color: #{{ color(clamp(agency.todays_sentiment, -10, 10), [-10,10]) }}"> {{ agency.name.upper() }}
-            </span>
+            <a href="{{ url_for("agency", agency=agency.name) }}">
+                <span class="agencyname" style="background-color: #{{
+                    color(clamp(agency.todays_sentiment, -10, 10), [-10,10])
+                    }}">{{ agency.name.upper() }}</span>
+            </a>
             today &times;{{ agency.todays_count }}
             [
             <span style="color: #{{ color(agency.todays_sentiment) }}">{{ agency.todays_sentiment }}%</span>,
