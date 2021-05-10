@@ -31,6 +31,8 @@ def index():
         'Articles': (Agency.query.join(Article)
                      .filter(Article.date==date.today()).group_by(Agency.id)
                      .order_by(db.func.count(Article.id).desc())),
+        'Cumulative Sentiment': Agency.query.order_by(Agency.cum_sent.desc()),
+        'Cumulative Neutrality': Agency.query.order_by(Agency.cum_neut.desc()),
     }
     page = request.args.get('page', default=1)
     try:
