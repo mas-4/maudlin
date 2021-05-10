@@ -26,7 +26,7 @@ class WapoSpider(scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('span', attrs={'data-qa': re.compile(r'headline')}).text.strip()
+            item['title'] = soup.find('h1', id='main-content').text.strip()
 
             byline = soup.find('span', attrs={'data-sc-c': 'author'})
             item['byline'] = byline.text.strip()
