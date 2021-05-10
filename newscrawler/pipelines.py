@@ -15,6 +15,8 @@ class NewscrawlerPipeline:
         # check if the article exists by its url or its title. Still might get
         # dupes. Breitbart uses different urls for the same article, and
         # sometimes agencies change the title over time.
+        if not item['text']:
+            return item
         article = (Article.query.filter(Article.url==item['url']).first() or
                    Article.query.filter(Article.title==item['title']).first())
         created = False
@@ -31,8 +33,7 @@ class NewscrawlerPipeline:
         article.date = item['date']
         article.text = item['text']
 
-        # sentiment data
-        sid = self.sid.polarity_scores(article.text)
+        # sentiment data sid = self.sid.polarity_scores(article.text)
         article.pos = sid['pos']
         article.neg = sid['neg']
         article.neu = sid['neu']
