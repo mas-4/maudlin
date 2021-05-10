@@ -1,3 +1,4 @@
+import re
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -8,11 +9,11 @@ CLASS = 'article-body'
 class FoxSpider(scrapy.Spider, BoilerPlateParser):
     name = 'fox'
     allowed_domains = ['feeds.foxnews.com', 'www.foxnews.com']
-    start_urls = ['http://feeds.foxnews.com/foxnews/latest']
+    start_urls = ['https://www.foxnews.com']
 
     def parse(self, response):
         soup = BS(response.text, 'lxml')
-        if 'www' in response.url:
+        if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
             item['title'] = response.css('h1.headline::text').get()
@@ -32,10 +33,14 @@ class FoxSpider(scrapy.Spider, BoilerPlateParser):
             # filter out ad paragraphs, which are always all caps
             paragraphs = list(filter(lambda l: l.text.strip().upper() != l.text.strip(), paragraphs))
             text = self.joinparagraphs(paragraphs)
-
-            # replace nbsp
-            item['text'] = text.replace('\xa0', ' ')
+            item['text'] = text
 
             yield item
-        for a in response.css('guid::text'):
-            yield response.follow(a, callback=self.parse)
+
+        if response.url == self.start_urls[0]:
+            root = soup.find('div', class_='page-content')
+            attrs={'href': re.compile(r'https://www.foxnews.com/.+/[-a-z0-9]+$')}
+            links = set(a['href'] for a in root.find_all('a', attrs=attrs))
+            for link in links:
+                if '/cartoons-slideshow' not in link:
+                    yield response.follow(link, callback=self.parse)
