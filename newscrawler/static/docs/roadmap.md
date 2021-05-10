@@ -52,7 +52,7 @@
 - [ ] Atlantic
 - [ ] Boston.com
 - [ ] Dallas Morning News
-- [ ] Daily Wire
+- [X] Daily Wire
 - [ ] Jacobin
 - [ ] Daily Kos
 - [ ] Mother Jones

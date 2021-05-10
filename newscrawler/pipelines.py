@@ -16,6 +16,8 @@ class NewscrawlerPipeline:
         # dupes. Breitbart uses different urls for the same article, and
         # sometimes agencies change the title over time.
         if not item['text']:
+            logging.info("No text")
+            logging.info(item['url'])
             return item
         article = (Article.query.filter(Article.url==item['url']).first() or
                    Article.query.filter(Article.title==item['title']).first())
@@ -27,13 +29,14 @@ class NewscrawlerPipeline:
             created = True
 
         # article data
-        article.title = item['title']
+        article.title = item['title'].replace('\xa0', '')
         article.url = item['url']
-        article.byline = item['byline']
+        article.byline = item['byline'].replace('\xa0', '')
         article.date = item['date']
         article.text = item['text']
 
         # sentiment data sid = self.sid.polarity_scores(article.text)
+        sid = self.sid.polarity_scores(article.text)
         article.pos = sid['pos']
         article.neg = sid['neg']
         article.neu = sid['neu']
