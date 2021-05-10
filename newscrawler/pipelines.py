@@ -43,11 +43,13 @@ class NewscrawlerPipeline:
         if not agency:
             agency = Agency()
             agency.name = item['agency']
-            agency.homepage = item['start']
-            # because it's a running average the first data point is just this
-            # article.
+            # because it's a running average the
+            # first data point is just this article.
             agency.cum_sent = article.sent
             agency.cum_neut = article.neu
+
+        # update homepage if we change a thing
+        agency.homepage = item['start']
 
         article.agency = agency
 
@@ -62,9 +64,10 @@ class NewscrawlerPipeline:
 
         try:
             if created:
+                logging.info("New article created:" + repr(article))
                 db.session.add(article)
             db.session.commit()
-            logging.info("Successfully committed")
+            logging.info("Successfully committed:" + repr(article))
         except Exception as e:
             logging.info(e)
             logging.info(article)
