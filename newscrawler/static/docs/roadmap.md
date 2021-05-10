@@ -14,16 +14,50 @@
 - [X] Slate
 - [X] The Blaze
 - [X] Breitbart
-- [ ] US News (Requires headers, has a honey pot)
 - [X] Telegraph
 - [X] Vice
 - [X] Vox
 - [X] Daily Beast
 - [X] Salon
 - [X] New Yorker
-- [X] WaPo (Required sending headers form requests, scrapy default headers
+- [X] WaPo: Required sending headers form requests, scrapy default headers
   refused, kind of slow but that's okay. I think they don't mind scraping but
-  they give it the slow lane)
+  they give it the slow lane
+- [ ] US News: Requires headers, has a honey pot
+- [ ] Daily Mail: 403s even with headers on all subpages; Can't really use
+  selenium unless I figure out the 403 problem or how to handle requests myself
+- [ ] Newsweek
+- [ ] Washington Monthly
+- [ ] MSNBC
+- [ ] The Intercept
+- [ ] Vanity Fair
+- [ ] Tampa Bay Times
+- [ ] Orlando Sentinel
+- [ ] Al Jazeera
+- [ ] Axios
+- [ ] New York Daily News
+- [ ] Business Insider
+- [ ] MSN News
+- [ ] Los Angeles Times
+- [ ] New York Post
+- [ ] Time
+- [ ] SFGate
+- [ ] Slate
+- [ ] Chron
+- [ ] Chicago Tribune
+- [ ] The Mirror
+- [ ] Independent.co.uk
+- [ ] Detroit Free Press
+- [ ] Boston Globe
+- [ ] Atlantic
+- [ ] Boston.com
+- [ ] Dallas Morning News
+- [ ] Daily Wire
+- [ ] Jacobin
+- [ ] Daily Kos
+- [ ] Mother Jones
+- [ ] Reuters
+- [ ] AP
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
 
