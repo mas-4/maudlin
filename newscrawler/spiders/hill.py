@@ -1,3 +1,4 @@
+import re
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -15,29 +16,32 @@ class HillSpider(scrapy.Spider, BoilerPlateParser):
             item = self.prepopulate_item(response)
 
             item['title'] = soup.find('h1', id='page-title').text.strip()
-            byline = soup.find('span', class_='submitted-by').a.text.strip()
-            item['byline'] = byline
+            byline = soup.find('span', class_='submitted-by')
+            if byline:
+                item['byline'] = byline.text.strip()
+            else:
+                item['byline'] = None
 
-            date = soup.find('span', class_='submitted-date').text.strip()
-            date = parser.parse(date.replace('.', ':'))
+            date = soup.find('span', class_='submitted-date')
+            if date:
+                date = parser.parse(date.text.strip().replace('.', ':'))
+            else:
+                date = None
             item['date'] = date
 
-            story = soup.find('div', attrs={'class': 'field-item'})
+            story = soup.find('div', attrs={'class': 'field-items'})
             paragraphs = story.find_all('p')
-            text = self.joinparagraphs(paragraphs)
-            item['text'] = text
+            if paragraphs:
+                text = self.joinparagraphs(paragraphs)
+                item['text'] = text
+            else:
+                item['text'] = story.text.strip().replace('\xa0', ' ')
 
             yield item
 
         if response.url == self.start_urls[0]:
-            root = soup.find('div', id='main')
-            links = []
-            for a in root.find_all('a'):
-                try:
-                    links.append(a['href'])
-                except:
-                    continue
-
+            attrs={'href': re.compile('/\d{6}[-0-9a-z]+$')}
+            links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
-                if '/shopping' not in link:
+                if 'shopping' not in link:
                     yield response.follow(link, callback=self.parse)
