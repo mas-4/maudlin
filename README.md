@@ -65,8 +65,16 @@ Dashboard is quite preliminary for now. The main page lists all of today's
 articles per news agency. This is going to end up being changed because it's too
 much content.
 
+The "compound" number is provided by vader_lexicon but I don't like it. It's too
+polarized and I think that's mostly because it's just a likelihood that it's
+positive or negative, not a "how positive or negative". So I calculate my own
+sentiment by just subtracting negative from positive (as provided by
+vader_lexicon).
+
 Each agency page has some stats, the top most recent 100 articles, and a word
 cloud. I'm quite proud of the word cloud idea, I just wish it was faster. Might
 look into caching.
 
-I still want graphs over time.
+## TODO
+- [ ] Sentiment over time graphs for each agency
+- [ ] Partisanship weighted daily sentiment
