@@ -31,7 +31,7 @@ class NewscrawlerPipeline:
         # article data
         article.title = item['title'].replace('\xa0', '')
         article.url = item['url']
-        article.byline = item['byline'].replace('\xa0', '') if item['byline'] else None
+        article.byline = item['byline'].replace('\xa0', '') if hasattr(item, 'byline') else None
         article.date = item['date']
         article.text = item['text']
 

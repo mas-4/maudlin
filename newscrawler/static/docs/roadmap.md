@@ -31,9 +31,9 @@
 - [ ] Washington Monthly
 - [X] Foreign Policy
 - [X] MSNBC
-- [ ] The Intercept
+- [X] The Intercept
 - [ ] Vanity Fair
-- [ ] Tampa Bay Times
+- [X] Tampa Bay Times
 - [ ] Orlando Sentinel
 - [ ] Al Jazeera
 - [ ] Axios
