@@ -1,12 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="pagination">
-        Pages:
-        {% for p in pages %}
-            <a href="{{ url_for('articles', per_page=per_page, page=p, sort=sort, direction=direction) }}" {% if page == p %}class="active"{% endif %}>{{ p }}</a>
-        {% endfor %}
-    </div>
+    {% include 'pages.html' %}
 
     <div class="pagination">
         Per Page:
@@ -53,11 +48,6 @@
         </tbody>
     </table>
 
-    <div class="pagination">
-        Pages:
-        {% for p in pages %}
-            <a href="{{ url_for('articles', per_page=per_page, page=p, direction=direction, sort=sort) }}" {% if page == p %}class="active"{% endif %} >{{ p }}</a>
-        {% endfor %}
-    </div>
+    {% include 'pages.html' %}
 {% endblock %}
 

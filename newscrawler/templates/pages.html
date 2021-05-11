@@ -1,0 +1,18 @@
+<div class="pagination">
+    Pages:
+    {% if prev %}
+    <a href="{{ prev }}"><</a>
+    {% endif %}
+
+    {% for p in pages %}
+        {% if p == '...' %}
+            <span>...</span>
+        {% else %}
+            <a {% if page==p %}class="active"{% endif %} href="{{ url_for('articles', per_page=per_page, page=p, sort=sort, direction=direction) }}" {% if page == p %}class="active"{% endif %}>{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if next %}
+        <a href="{{ next }}">></a>
+    {% endif %}
+</div>

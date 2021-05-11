@@ -1,7 +1,8 @@
 import math, io, string, time, os
 import requests as rq
 from datetime import date
-from flask import render_template, send_file, request, current_app, abort
+from flask import (render_template, send_file, request, current_app, abort,
+                   url_for)
 from newscrawler import app, db
 from newscrawler.models import Agency, Article
 from wordcloud import WordCloud, STOPWORDS
@@ -140,6 +141,32 @@ def agencywordcloud(agency):
     return send_file(file_object, mimetype='image/png')
 
 
+def pagination(c, m):
+    current = c
+    last = m
+    delta = 2
+    left = current - delta
+    right = current + delta + 1
+    rng = []
+    rangeWithDots = []
+    l = None
+
+    for i in range(1, last+1):
+        if i == 1 or i == last or i >= left and i < right:
+            rng.append(i)
+
+    for i in rng:
+        if l:
+            if i - l == 2:
+                rangeWithDots.append(l + 1)
+            elif i - l != 1:
+                rangeWithDots.append('...')
+        rangeWithDots.append(i)
+        l = i
+
+    return rangeWithDots
+
+
 @app.route('/articles')
 def articles():
     """A table of all articles"""
@@ -161,14 +188,20 @@ def articles():
         'neu': Article.neu,
         'compound': Article.compound,
     }
-    pages = list(range(1, math.ceil(Article.query.count() / per_page)+1))
+    maxpages = math.ceil(Article.query.count() / per_page)
+    pages = pagination(page, maxpages)
     arts = Article.query\
         .order_by(getattr(sorts[sort], direction, 'asc')())\
         .filter(Article.agency!=None)\
         .paginate(page, per_page, True)
+    next = (url_for('articles', page=page+1, sort=sort, direction=direction) if
+            arts.has_next else None)
+    prev = (url_for('articles', page=page-1, sort=sort, direction=direction) if
+            arts.has_prev else None)
     return render_template('articles.html', articles=arts.items, pages=pages,
                            sort=sort, page=page, direction=direction,
-                           per_page=per_page, per_pages=per_pages)
+                           per_page=per_page, per_pages=per_pages,
+                           next=next, prev=prev)
 
 @app.route('/docs/<doc>')
 def docs(doc):
