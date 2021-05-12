@@ -1,0 +1,61 @@
+html {
+  font-family: sans-serif;
+  padding: 1rem; }
+
+a {
+  text-decoration: none; }
+
+.cards {
+  display: flex;
+  flex-wrap: wrap; }
+
+.cards li {
+  margin-right: 1rem;
+  margin-top: 2rem;
+  width: 20rem; }
+
+ul.cards {
+  list-style-type: none; }
+
+nav a {
+  margin: 1rem;
+  font-size: 1.5rem; }
+
+nav {
+  margin: 1rem; }
+
+table.article-table {
+  border-spacing: 1rem; }
+
+table.article-table td {
+  padding: 1rem;
+  border-spacing: 1rem; }
+
+.active {
+  background-color: lightgrey;
+  padding: 0.25rem; }
+
+.pagination {
+  margin: 1rem; }
+
+.pagination a {
+  margin-right: 0.5rem;
+  padding: 0.25rem; }
+
+.agencyname {
+  display: inline-block;
+  width: 15rem;
+  text-align: center;
+  margin-right: 0.5rem;
+  padding: 0.25rem;
+  color: white; }
+
+.today {
+  display: inline-block;
+  width: 30rem;
+  text-align: center;
+  margin-right: 0.5rem;
+  padding: 0.25rem;
+  color: white; }
+
+/*# sourceMappingURL=style.scss.css.map */

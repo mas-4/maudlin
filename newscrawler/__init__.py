@@ -3,6 +3,7 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flaskext.markdown import Markdown
 from flask_sqlalchemy import SQLAlchemy
+from sassutils.wsgi import SassMiddleware
 from newscrawler.config import Config
 from newscrawler import utils
 
@@ -14,6 +15,9 @@ md = Markdown(app,
 #              extension_configs={'footnotes': ('PLACE_MARKER','~~~~~~~~')},
               safe_mode=True,
               output_format='html4')
+app.wsgi_app = SassMiddleware(
+    app.wsgi_app,
+    { 'newscrawler': ('static/sass', 'static/css', '/static/css') })
 
 if not app.debug:
     if not os.path.exists('logs'):
