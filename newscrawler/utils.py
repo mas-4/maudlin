@@ -18,3 +18,29 @@ def interpolate(color1='FF0000', color2='00FF00', factor=0.5):
 def color(num, r=[-100,100], color1='FF0000', color2='00FF00'):
     c = interpolate(factor=refactor(num, r, [0,1]), color1=color1, color2=color2)
     return c
+
+def pagination(c, m):
+    current = c
+    last = m
+    delta = 2
+    left = current - delta
+    right = current + delta + 1
+    rng = []
+    rangeWithDots = []
+    l = None
+
+    for i in range(1, last+1):
+        if i == 1 or i == last or i >= left and i < right:
+            rng.append(i)
+
+    for i in rng:
+        if l:
+            if i - l == 2:
+                rangeWithDots.append(l + 1)
+            elif i - l != 1:
+                rangeWithDots.append('...')
+        rangeWithDots.append(i)
+        l = i
+
+    return rangeWithDots
+

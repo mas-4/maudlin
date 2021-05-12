@@ -1,19 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="pagination">
-        Sort by:
+    <ul class="pagination">
         {% for s in sorts %}
-            <a {% if sort==s %}class="active"{% endif %} style="margin-left: 1rem;" href="{{ url_for('agencies', sort=s) }}">{{ s }}</a>
+            <li class="{% if sort==s %}active{% endif %} waves-effect"><a href="{{ url_for('agencies', sort=s) }}">{{ s }}</a></li>
         {% endfor %}
-    </div>
-    <ul class="cards">
-    {% for agency in agencies %}
-        <li>
-            <h1><a href="{{ url_for('agency', agency=agency.name) }}">{{ agency.name.upper() }}</a></h1>
-            <p>Articles: &times;{{ agency.articles.count() }}
-            <p>Sentiment: {{ agency.cumulative_sentiment }}%</p>
-            <p>Neutrality: {{ agency.cumulative_neutrality }}%</p>
-        </li>
+    </ul>
+    <ul class="pagination">
+    {% for p in pages %}
+        {% if p == '...' %}
+            <span>...</span>
+        {% else %}
+            <li class="waves-effect {% if p==page %}active{% endif %}"><a href="{{ url_for("agencies", page=p) }}">{{ p }}</a></li>
+        {% endif %}
     {% endfor %}
     </ul>
+    <div class="container">
+        <div class="row">
+            {% for agency in agencies %}
+                <div class="col s6 m6">
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="{{ url_for("agencywordcloud", agency=agency.name, scale=1) }}">
+                        </div>
+                        <div class="card-content">
+                            <span class="card-title">
+                                {{ agency.name.upper() }}
+                            </span>
+                            <p>Articles: &times;{{ agency.articles.count() }}
+                            <p>Sentiment: {{ agency.cumulative_sentiment }}%</p>
+                            <p>Neutrality: {{ agency.cumulative_neutrality }}%</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="{{ url_for('agency', agency=agency.name) }}">
+                                See Agency
+                            </a>
+                            <a href="{{ agency.homepage }}">Homepage</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

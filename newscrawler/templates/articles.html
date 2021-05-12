@@ -1,16 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <ul class="pagination">
+        {% for p in per_pages %}
+            <li class="{% if per_page==p %}active{% endif %} waves-effect"><a href="{{ url_for('articles', per_page=p, page=page, sort=sort, direction=direction) }}">{{ p }}</a></li>
+        {% endfor %}
+    </ul>
     {% include 'pages.html' %}
 
-    <div class="pagination">
-        Per Page:
-        {% for p in per_pages %}
-            <a href="{{ url_for('articles', per_page=p, page=page, sort=sort, direction=direction) }}" {% if per_page == p %}class="active"{% endif %}>{{ p }}</a>
-        {% endfor %}
-    </div>
-
-    <table class="article-table">
+    <table class="highlight">
         <thead>
             <tr>
                 <th>Agency</th>

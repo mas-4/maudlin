@@ -1,18 +1,17 @@
-<div class="pagination">
-    Pages:
-    {% if prev %}
-    <a href="{{ prev }}"><</a>
-    {% endif %}
+<ul class="pagination">
+    <li class="{% if prev %}waves-effect{% else %}disabled{% endif %}disabled">
+        <a {% if prev %}href="{{ prev }}"{% endif %}><i class="material-icons">chevron_left</i></a>
+    </li>
 
     {% for p in pages %}
         {% if p == '...' %}
             <span>...</span>
         {% else %}
-            <a {% if page==p %}class="active"{% endif %} href="{{ url_for('articles', per_page=per_page, page=p, sort=sort, direction=direction) }}" {% if page == p %}class="active"{% endif %}>{{ p }}</a>
+            <li class="waves-effect {% if p==page %}active{% endif %}"><a href="{{ url_for('articles', per_page=per_page, page=p, sort=sort, direction=direction) }}">{{ p }}</a></li>
         {% endif %}
     {% endfor %}
 
-    {% if next %}
-        <a href="{{ next }}">></a>
-    {% endif %}
-</div>
+    <li class="{% if next %}waves-effect{% else %}disabled{% endif %}disabled">
+        <a {% if next %}href="{{ next }}"{% endif %}><i class="material-icons">chevron_right</i></a>
+    </li>
+</ul>

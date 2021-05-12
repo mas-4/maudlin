@@ -5,6 +5,7 @@ from flask import (render_template, send_file, request, current_app, abort,
                    url_for)
 from newscrawler import app, db
 from newscrawler.models import Agency, Article
+from newscrawler.utils import pagination
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
 import nltk
@@ -40,7 +41,7 @@ def index():
         page = int(page)
     except:
         abort(404)
-    PER_PAGE = 5
+    PER_PAGE = 3
     pages = list(range(1, math.ceil(Agency.query.count() / PER_PAGE)+1))
     t = timing(t, "getting sorts and pages")
 
@@ -64,7 +65,8 @@ def index():
         dbcount=Article.query.count(),
         agencies=agencies.items,
         sorts=sorts, sort=sort, pages=pages, page=page,
-        overall=Article.todays_sentiment(), running=jobs['running'])
+        overall=Article.todays_sentiment(), running=jobs['running'],
+        active='index')
     timing(t, "rendering template")
     return html
 
@@ -73,6 +75,12 @@ def index():
 def agencies():
     """List of all agencies"""
     sort = request.args.get('sort', default='Name')
+    page = request.args.get('page', default='1')
+    per_page = 6
+    try:
+        page = int(page)
+    except:
+        abort(404)
     sorts = {
         'Name': Agency.query.order_by(Agency.name),
         'Sentiment': Agency.query.order_by(Agency.cum_sent.desc()),
@@ -80,16 +88,20 @@ def agencies():
         'Articles': (Agency.query.join(Article).group_by(Agency.id)
                         .order_by(db.func.count(Article.id).desc())),
     }
-    agencies = sorts[sort].all()
-    return render_template('agencies.html', agencies=agencies,
-                           sorts=sorts.keys(), sort=sort)
+    maxpages = math.ceil(Agency.query.count() / per_page)
+    pages = pagination(page, maxpages)
+    agencies = sorts[sort].paginate(page, per_page, False)
+    return render_template('agencies.html', agencies=agencies.items,
+                           sorts=sorts.keys(), sort=sort,
+                           page=page, pages=pages, active='agencies')
 
 
 @app.route('/agency/<agency>')
 def agency(agency):
     """Data for a particular agency"""
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
-    return render_template('agency.html', agency=agency, Article=Article)
+    return render_template('agency.html', agency=agency, Article=Article,
+                           active='agency')
 
 
 stopwords = list(STOPWORDS)
@@ -105,12 +117,16 @@ POS = [
 @app.route('/agency/<agency>/wordcloud')
 def agencywordcloud(agency):
     """Generate a wordcloud for today's articles, or the last 15 articles"""
+    scale = request.args.get('scale', default=5)
+    try:
+        scale = int(width)
+        app.logger.info(scale)
+    except:
+        scale = 5
     t = time.time()
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     text = []
-    articles = agency.articles.filter(Article.date==date.today()).all()
-    if not articles:
-        articles = agency.articles.order_by(Article.date.desc()).limit(15).all()
+    articles = agency.articles.order_by(Article.date.desc()).limit(15).all()
 
     for article in articles:
         text.append(article.text)
@@ -126,8 +142,8 @@ def agencywordcloud(agency):
 
     # Make wordcloud
     wordcloud = WordCloud(
-        width=200, height=113, background_color='white',
-        stopwords=stopwords, scale=5)\
+        width=150, height=80, background_color='white',
+        stopwords=stopwords, scale=scale)\
         .generate(text).to_array()
     t = timing(t, "generating wordcloud")
 
@@ -139,32 +155,6 @@ def agencywordcloud(agency):
     timing(t, "generating image")
 
     return send_file(file_object, mimetype='image/png')
-
-
-def pagination(c, m):
-    current = c
-    last = m
-    delta = 2
-    left = current - delta
-    right = current + delta + 1
-    rng = []
-    rangeWithDots = []
-    l = None
-
-    for i in range(1, last+1):
-        if i == 1 or i == last or i >= left and i < right:
-            rng.append(i)
-
-    for i in rng:
-        if l:
-            if i - l == 2:
-                rangeWithDots.append(l + 1)
-            elif i - l != 1:
-                rangeWithDots.append('...')
-        rangeWithDots.append(i)
-        l = i
-
-    return rangeWithDots
 
 
 @app.route('/articles')
@@ -201,7 +191,7 @@ def articles():
     return render_template('articles.html', articles=arts.items, pages=pages,
                            sort=sort, page=page, direction=direction,
                            per_page=per_page, per_pages=per_pages,
-                           next=next, prev=prev)
+                           next=next, prev=prev, active='articles')
 
 @app.route('/docs/<doc>')
 def docs(doc):
@@ -212,4 +202,4 @@ def docs(doc):
         f = app.open_resource(path, mode='rt').read()
     except:
         abort(404)
-    return render_template('docs.html', doc=f)
+    return render_template('docs.html', doc=f, active='doc')

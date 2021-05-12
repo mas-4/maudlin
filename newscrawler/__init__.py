@@ -6,15 +6,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sassutils.wsgi import SassMiddleware
 from newscrawler.config import Config
 from newscrawler import utils
+from flask import Flask
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
 db = SQLAlchemy(app)
-md = Markdown(app,
-              extensions=['footnotes'],
-#              extension_configs={'footnotes': ('PLACE_MARKER','~~~~~~~~')},
-              safe_mode=True,
-              output_format='html4')
+md = Markdown(app, safe_mode=True, output_format='html4')
 app.wsgi_app = SassMiddleware(
     app.wsgi_app,
     { 'newscrawler': ('static/sass', 'static/css', '/static/css') })

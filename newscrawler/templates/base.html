@@ -1,31 +1,38 @@
 <html>
     <head>
         {% if title %}
-        <title>{{ title }} - Maudlin</title>
+            <title>{{ title }} - Maudlin</title>
         {% else %}
-        <title>Welcome to Maudlin</title>
+            <title>Welcome to Maudlin</title>
         {% endif %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.scss.css') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.scss.css') }}">
     </head>
     <body>
         <nav>
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('agencies') }}">Agencies</a>
-            <a href="{{ url_for('articles') }}">Articles</a>
-            <a href="{{ url_for('docs', doc='about') }}">About</a>
-            <a href="{{ url_for('docs', doc='roadmap') }}">Roadmap</a>
+            <div class="nav-wrapper">
+                <ul class="left">
+                    <li {% if active=='index' %}class="active"{% endif %}><a href="{{ url_for('index') }}">Home</a></li>
+                    <li {% if active=='agencies' %}class="active"{% endif %}><a href="{{ url_for('agencies') }}">Agencies</a></li>
+                    <li {% if active=='articles' %}class="active"{% endif %}><a href="{{ url_for('articles') }}">Articles</a></li>
+                    <li {% if active=='about' %}class="active"{% endif %}><a href="{{ url_for('docs', doc='about') }}">About</a></li>
+                    <li {% if active=='roadmap' %}class="active"{% endif %}><a href="{{ url_for('docs', doc='roadmap') }}">Roadmap</a></li>
+                </ul>
+            </div>
         </nav>
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
     </body>
 </html>
 

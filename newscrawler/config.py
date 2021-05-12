@@ -14,3 +14,6 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SCRAPY_URL = os.environ.get('SCRAPY_URL') or \
         'http://localhost:6800'
+
+    CACHE_TYPE = "SimpleCache"  # Flask-Caching related configs
+    CACHE_DEFAULT_TIMEOUT = 300
