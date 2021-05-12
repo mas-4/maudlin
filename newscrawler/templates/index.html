@@ -26,7 +26,6 @@
             <li class="{% if page==p %}active{% endif %} waves-effect"><a href="{{ url_for('index', page=p, sort=sort) }}">{{ p }}</a></li>
         {% endfor %}
     </ul>
-    <p>key: [ <b>sentiment</b> (positive minus negative), <b>neutrality</b>, <b>compound</b> ]</p>
     {% for agency in agencies %}
         <ul class="collection with-header">
             <li class="collection-header">
@@ -41,6 +40,7 @@
                     <span style="color: #{{ color(clamp(agency.todays_neutrality, 70,100), [70,100], color1='808080', color2='0000FF') }}">{{ agency.todays_neutrality }}%</span>
                     ]
                 </h4>
+            <p>key: [ <b>sentiment</b> (positive minus negative), <b>neutrality</b>, <b>compound</b> ]</p>
             </li>
             {% for article in agency.todays_articles %}
                 <li class="collection-item avatar">
