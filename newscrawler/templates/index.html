@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Today's articles &times;{{ count }} (total &times;{{ dbcount }})</h1>
-    <h2 class="today" style="background-color: #{{ color(overall, [-10, 10]) }};">Today's Sentiment: {{ overall }}%</h2>
+    <h2 class="today" style="background-color: #{{ color(clamp(overall, -20,20), [-20, 20]) }};">Today's Sentiment: {{ overall }}%</h2>
     {% if running %}
     <h2>Running spiders:</h2>
     <ul>
