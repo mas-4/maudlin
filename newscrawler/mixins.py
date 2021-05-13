@@ -18,6 +18,13 @@ class BoilerPlateParser:
         text = list(filter(lambda l: l.strip(), text))
         return '\n\n'.join(text).replace('\xa0', ' ')
 
+    def populate_item(self, title, byline, date, text, item):
+        item['title'] = title
+        item['byline'] = byline
+        item['date'] = date
+        item['text'] = text
+        return item
+
 
 class SeleniumMixin:
     @classmethod
