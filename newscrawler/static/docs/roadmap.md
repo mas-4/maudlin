@@ -36,7 +36,7 @@
 - [X] Tampa Bay Times
 - [ ] Orlando Sentinel
 - [X] Al Jazeera
-- [ ] Axios
+- [X] Axios
 - [ ] New York Daily News
 - [ ] Business Insider
 - [ ] MSN News
