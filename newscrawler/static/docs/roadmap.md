@@ -1,5 +1,14 @@
 ## News Services
 
+- [ ] Jacobin
+- [ ] Daily Kos
+- [ ] Mother Jones
+- [ ] Reuters
+- [ ] AP
+- [ ] Atlantic
+- [ ] New York Post
+- [ ] Time
+- [ ] Slate
 - [X] CNN
 - [X] ABC
 - [X] NBC
@@ -38,28 +47,19 @@
 - [X] Al Jazeera
 - [X] Axios
 - [ ] New York Daily News
-- [ ] Business Insider
+- [X] Business Insider
 - [ ] MSN News
 - [ ] Los Angeles Times
-- [ ] New York Post
-- [ ] Time
 - [ ] SFGate
-- [ ] Slate
 - [ ] Chron
 - [ ] Chicago Tribune
 - [ ] The Mirror
 - [ ] Independent.co.uk
 - [ ] Detroit Free Press
 - [ ] Boston Globe
-- [ ] Atlantic
 - [ ] Boston.com
 - [ ] Dallas Morning News
 - [X] Daily Wire
-- [ ] Jacobin
-- [ ] Daily Kos
-- [ ] Mother Jones
-- [ ] Reuters
-- [ ] AP
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
 
