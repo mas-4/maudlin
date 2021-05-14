@@ -35,7 +35,7 @@
 - [X] Vanity Fair
 - [X] Tampa Bay Times
 - [ ] Orlando Sentinel
-- [ ] Al Jazeera
+- [X] Al Jazeera
 - [ ] Axios
 - [ ] New York Daily News
 - [ ] Business Insider
