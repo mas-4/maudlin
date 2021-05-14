@@ -32,7 +32,7 @@
 - [X] Foreign Policy
 - [X] MSNBC
 - [X] The Intercept
-- [ ] Vanity Fair
+- [X] Vanity Fair
 - [X] Tampa Bay Times
 - [ ] Orlando Sentinel
 - [ ] Al Jazeera
