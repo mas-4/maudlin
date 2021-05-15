@@ -3,6 +3,7 @@ import requests as rq
 from datetime import date
 from flask import (render_template, send_file, request, current_app, abort,
                    url_for)
+from sqlalchemy import func, asc, desc
 from newscrawler import app, db
 from newscrawler.models import Agency, Article
 from newscrawler.utils import pagination
@@ -156,10 +157,8 @@ def agencywordcloud(agency):
 
     return send_file(file_object, mimetype='image/png')
 
-
-@app.route('/articles')
-def articles():
-    """A table of all articles"""
+DIRECTIONS = {'asc': asc, 'desc': desc}
+def get_args(request):
     page = request.args.get('page', default='1')
     try:
         page = int(page)
@@ -167,21 +166,36 @@ def articles():
         abort(404)
     sort = request.args.get('sort', default='date')
     direction = request.args.get('direction', default='asc')
+    if direction in DIRECTIONS.keys():
+        dirfunc = DIRECTIONS[direction]
+    else:
+        dirfunc = DIRECTIONS['asc']
     per_page = int(request.args.get('per_page', default='50'))
+    print(direction)
+
+    return page, sort, direction, dirfunc, per_page
+
+
+@app.route('/articles')
+def articles():
+    """A table of all articles"""
     per_pages = [10, 25, 50, 100, 250, 500]
+    page, sort, direction, dirfunc, per_page = get_args(request)
+    q = Article.query
     sorts = {
-        'title': Article.title,
-        'date': Article.date,
-        'byline': Article.byline,
-        'pos': Article.pos,
-        'neg': Article.neg,
-        'neu': Article.neu,
-        'compound': Article.compound,
+        'agency': q.join(Article.agency).order_by(dirfunc(Agency.name)),
+        'title': q.order_by(dirfunc(Article.title)),
+        'date': q.order_by(dirfunc(Article.date)),
+        'byline': q.order_by(dirfunc(Article.byline)),
+        'pos': q.order_by(dirfunc(Article.pos)),
+        'neg': q.order_by(dirfunc(Article.neg)),
+        'neu': q.order_by(dirfunc(Article.neu)),
+        'compound': q.order_by(dirfunc(Article.compound)),
+        'sent': q.order_by(dirfunc(Article.sent))
     }
     maxpages = math.ceil(Article.query.count() / per_page)
     pages = pagination(page, maxpages)
-    arts = Article.query\
-        .order_by(getattr(sorts[sort], direction, 'asc')())\
+    arts = sorts.get(sort, sorts['date'])\
         .filter(Article.agency!=None)\
         .paginate(page, per_page, True)
     next = (url_for('articles', page=page+1, sort=sort, direction=direction) if

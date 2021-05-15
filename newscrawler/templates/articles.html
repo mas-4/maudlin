@@ -11,22 +11,35 @@
     <table class="highlight">
         <thead>
             <tr>
-                <th>Agency</th>
-                {# title #}
-                <th {% if sort=='title' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='title', direction='asc' if direction=='desc' else 'desc') }}">Title</a></th>
+                {% with s='agency' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
+                {% with s='title' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
                 {# date #}
-                <th {% if sort=='date' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='date', direction='asc' if direction=='desc' else 'desc') }}">Date</a></th>
-                {# byline #}
-                <th {% if sort=='byline' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='byline', direction='asc' if direction=='desc' else 'desc') }}">Byline</a></th>
-                {# pos #}
-                <th {% if sort=='pos' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='pos', direction='asc' if direction=='desc' else 'desc') }}">Positive</a></th>
+                {% with s='date' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
+                {% with s='byline' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
+                {% with s='pos' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
                 {# neg #}
-                <th {% if sort=='neg' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='neg', direction='asc' if direction=='desc' else 'desc') }}">Negative</a></th>
-                {# neu #}
-                <th {% if sort=='neu' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='neu', direction='asc' if direction=='desc' else 'desc') }}">Neutral</a></th>
-                {# compound #}
-                <th {% if sort=='compound' %}class="active"{% endif %}><a href="{{ url_for('articles', per_page=per_page, sort='compound', direction='asc' if direction=='desc' else 'desc') }}">Compound</a></th>
-                <th>Sentiment</th>
+                {% with s='neg' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
+                {% with s='neu' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
+                {% with s='compound' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
+                {% with s='sent' %}
+                    {% include 'sort_line.html' %}
+                {% endwith %}
             </tr>
         </thead>
         <tbody>

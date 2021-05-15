@@ -1,0 +1,14 @@
+{% with direction='asc' if direction=='desc' else 'desc' %}
+    <th {% if sort==s %}class="active"{% endif %}>
+        <a href="{{ url_for('articles', per_page=per_page, sort=s, direction=direction) }}">
+            {{ s.title() }}
+            {% if sort==s %}
+                {% if direction == 'asc' %}
+                    &#9700;
+                {% else %}
+                    &#9699;
+                {% endif %}
+            {% endif %}
+        </a>
+    </th>
+{% endwith %}

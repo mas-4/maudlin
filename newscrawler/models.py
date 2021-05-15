@@ -10,6 +10,7 @@ def average(prev_avg, x, n):
              n + x) /
             (n + 1));
 
+
 def windowed_query(q, column, windowsize):
     """"Break a Query into chunks on a given column."""
 

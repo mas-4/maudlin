@@ -6483,4 +6483,7 @@ html {
   padding: 0.25rem;
   color: white; }
 
+table {
+  table-layout: fixed; }
+
 /*# sourceMappingURL=style.scss.css.map */
