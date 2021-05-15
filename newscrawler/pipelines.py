@@ -20,6 +20,10 @@ class NewscrawlerPipeline:
             logging.info("No text")
             logging.info(item['url'])
             return item
+        if not item['date']:
+            logging.info("No date")
+            logging.info(item['date'])
+            return item
         article = (Article.query.filter(Article.url==item['url']).first() or
                    Article.query.filter(Article.title==item['title']).first())
         created = False
@@ -34,8 +38,6 @@ class NewscrawlerPipeline:
         article.url = item['url']
         article.byline = re.sub(re.compile('by', re.IGNORECASE), '', item['byline']).replace('\xa0', '') if hasattr(item, 'byline') and item['byline'] else None
         article.date = item['date']
-        if not article.date:
-            yield item
         article.text = item['text']
 
         sid = self.sid.polarity_scores(article.text)
