@@ -189,9 +189,9 @@ class Agency(Base):
         for i, a in enumerate(windowed_query(self.articles, Article.sent, 1000)):
             self.cum_sent = average(self.cum_sent, a.sent, i+1)
             if not i % 100:
-                print(self, i)
+                print(self, i, a)
         self.cum_neut = 0
         for i, a in enumerate(windowed_query(self.articles, Article.neu, 1000)):
             self.cum_neut = average(self.cum_neut, a.neu, i+1)
             if not i % 100:
-                print(self, i)
+                print(self, i, a)
