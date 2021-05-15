@@ -157,3 +157,4 @@ Thumbs.db
 setup.py
 .env
 logs
+*.ipynb
