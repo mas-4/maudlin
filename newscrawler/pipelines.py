@@ -34,9 +34,10 @@ class NewscrawlerPipeline:
         article.url = item['url']
         article.byline = re.sub(re.compile('by', re.IGNORECASE), '', item['byline']).replace('\xa0', '') if hasattr(item, 'byline') and item['byline'] else None
         article.date = item['date']
+        if not article.date:
+            yield item
         article.text = item['text']
 
-        # sentiment data sid = self.sid.polarity_scores(article.text)
         sid = self.sid.polarity_scores(article.text)
         article.pos = sid['pos']
         article.neg = sid['neg']
