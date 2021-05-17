@@ -115,7 +115,7 @@ POS = [
     'FW', 'JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'RB',
     'RBR', 'RBS', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VNP', 'VBZ']
 
-def wordcloud(text, scale):
+def wordcloud(text, scale, width=150, height=80, POS=POS):
     t = time.time()
     tokenized = nltk.word_tokenize(text)
     tokenized = nltk.pos_tag(tokenized)
@@ -128,7 +128,7 @@ def wordcloud(text, scale):
 
     # Make wordcloud
     wordcloud = WordCloud(
-        width=150, height=80, background_color='white',
+        width=width, height=height, background_color='white',
         stopwords=stopwords, scale=scale)\
         .generate(text).to_array()
     t = timing(t, "generating wordcloud")
@@ -180,7 +180,8 @@ def daywordcloud():
         text.append(article.text)
     text = ' '.join(text)
     t = timing(t, "joining text")
-    return wordcloud(text, scale)
+    return wordcloud(text, 1, width=1000, height=500, POS=['NNP', 'NNPS', 'NN',
+                                                           'NN'])
 
 
 DIRECTIONS = {'asc': asc, 'desc': desc}
