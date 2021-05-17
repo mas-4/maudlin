@@ -7,7 +7,7 @@
 - [X] AP
 - [X] Atlantic
 - [X] New York Post
-- [ ] Time
+- [X] Time
 - [ ] Slate
 - [X] CNN
 - [X] ABC
