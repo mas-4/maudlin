@@ -4,7 +4,7 @@
 - [X] Daily Kos
 - [X] Mother Jones
 - [X] Reuters
-- [ ] AP
+- [X] AP
 - [ ] Atlantic
 - [ ] New York Post
 - [ ] Time
