@@ -6,7 +6,7 @@
 - [X] Reuters
 - [X] AP
 - [X] Atlantic
-- [ ] New York Post
+- [X] New York Post
 - [ ] Time
 - [ ] Slate
 - [X] CNN
