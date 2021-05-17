@@ -8,7 +8,7 @@
 - [X] Atlantic
 - [X] New York Post
 - [X] Time
-- [ ] Slate
+- [X] Slate
 - [X] CNN
 - [X] ABC
 - [X] NBC
@@ -43,11 +43,12 @@
 - [X] The Intercept
 - [X] Vanity Fair
 - [X] Tampa Bay Times
-- [ ] Orlando Sentinel
 - [X] Al Jazeera
 - [X] Axios
-- [ ] New York Daily News
 - [X] Business Insider
+- [X] Daily Wire
+- [ ] Orlando Sentinel
+- [ ] New York Daily News
 - [ ] MSN News
 - [ ] Los Angeles Times
 - [ ] SFGate
@@ -59,7 +60,6 @@
 - [ ] Boston Globe
 - [ ] Boston.com
 - [ ] Dallas Morning News
-- [X] Daily Wire
 
 I'm pulling a lot of ideas from this: https://libguides.wlu.edu/c.php?g=357505&p=2412837
 
