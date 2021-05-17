@@ -5,7 +5,7 @@
 - [X] Mother Jones
 - [X] Reuters
 - [X] AP
-- [ ] Atlantic
+- [X] Atlantic
 - [ ] New York Post
 - [ ] Time
 - [ ] Slate
