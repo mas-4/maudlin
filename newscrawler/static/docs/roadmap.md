@@ -1,7 +1,7 @@
 ## News Services
 
 - [X] Jacobin
-- [ ] Daily Kos
+- [X] Daily Kos
 - [ ] Mother Jones
 - [ ] Reuters
 - [ ] AP
