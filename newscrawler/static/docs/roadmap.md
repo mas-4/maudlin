@@ -2,7 +2,7 @@
 
 - [X] Jacobin
 - [X] Daily Kos
-- [ ] Mother Jones
+- [X] Mother Jones
 - [ ] Reuters
 - [ ] AP
 - [ ] Atlantic
