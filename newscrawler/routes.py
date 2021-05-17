@@ -115,23 +115,8 @@ POS = [
     'FW', 'JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'RB',
     'RBR', 'RBS', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VNP', 'VBZ']
 
-@app.route('/agency/<agency>/wordcloud')
-def agencywordcloud(agency):
-    """Generate a wordcloud for today's articles, or the last 15 articles"""
-    scale = request.args.get('scale', default=5)
-    try:
-        scale = int(width)
-        app.logger.info(scale)
-    except:
-        scale = 5
+def wordcloud(text, scale):
     t = time.time()
-    agency = Agency.query.filter(Agency.name == agency).first_or_404()
-    text = []
-    articles = agency.articles.order_by(Article.date.desc()).limit(15).all()
-
-    for article in articles:
-        text.append(article.text)
-    text = ' '.join(text)
     tokenized = nltk.word_tokenize(text)
     tokenized = nltk.pos_tag(tokenized)
     text = []
@@ -157,6 +142,47 @@ def agencywordcloud(agency):
 
     return send_file(file_object, mimetype='image/png')
 
+
+@app.route('/agency/<agency>/wordcloud')
+def agencywordcloud(agency):
+    """Generate a wordcloud for today's articles, or the last 15 articles"""
+    scale = request.args.get('scale', default=5)
+    try:
+        scale = int(width)
+        app.logger.info(scale)
+    except:
+        scale = 5
+    agency = Agency.query.filter(Agency.name == agency).first_or_404()
+    articles = agency.articles.order_by(Article.date.desc()).limit(15).all()
+
+    text = []
+    for article in articles:
+        text.append(article.text)
+    text = ' '.join(text)
+    return wordcloud(text, scale)
+
+
+@app.route('/wordcloud')
+def daywordcloud():
+    """Generate a wordcloud for today's articles, or the last 15 articles"""
+    t = time.time()
+    scale = request.args.get('scale', default=5)
+    try:
+        scale = int(width)
+        app.logger.info(scale)
+    except:
+        scale = 5
+    articles = Article.query.filter(Article.date==date.today()).all()
+    t = timing(t, "getting articles")
+
+    text = []
+    for article in articles:
+        text.append(article.text)
+    text = ' '.join(text)
+    t = timing(t, "joining text")
+    return wordcloud(text, scale)
+
+
 DIRECTIONS = {'asc': asc, 'desc': desc}
 def get_args(request):
     page = request.args.get('page', default='1')
@@ -174,7 +200,6 @@ def get_args(request):
     print(direction)
 
     return page, sort, direction, dirfunc, per_page
-
 
 @app.route('/articles')
 def articles():
@@ -206,6 +231,7 @@ def articles():
                            sort=sort, page=page, direction=direction,
                            per_page=per_page, per_pages=per_pages,
                            next=next, prev=prev, active='articles')
+
 
 @app.route('/docs/<doc>')
 def docs(doc):
