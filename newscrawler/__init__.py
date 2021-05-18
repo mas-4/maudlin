@@ -7,12 +7,14 @@ from sassutils.wsgi import SassMiddleware
 from newscrawler.config import Config
 from newscrawler import utils
 from flask import Flask
+from .utils import make_celery
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
 md = Markdown(app, safe_mode=True, output_format='html4')
+celery_app = make_celery(app)
 app.wsgi_app = SassMiddleware(
     app.wsgi_app,
     { 'newscrawler': ('static/sass', 'static/css', '/static/css') })
@@ -37,3 +39,4 @@ app.jinja_env.globals.update(clamp=utils.clamp)
 app.jinja_env.globals.update(round=round)
 
 from newscrawler import routes, models, errors
+

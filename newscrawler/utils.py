@@ -1,3 +1,5 @@
+from celery import Celery
+
 def clamp(n, smallest, largest): return max(smallest, min(n, largest))
 
 def refactor(x, old, new):
@@ -43,4 +45,20 @@ def pagination(c, m):
         l = i
 
     return rangeWithDots
+
+
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        broker=app.config['CELERY_BROKER_URL']
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 

@@ -140,7 +140,7 @@ def wordcloud(text, scale, width=150, height=80, POS=POS):
     file_object.seek(0)
     timing(t, "generating image")
 
-    return send_file(file_object, mimetype='image/png')
+    return file_object
 
 
 @app.route('/agency/<agency>/wordcloud')
@@ -159,29 +159,7 @@ def agencywordcloud(agency):
     for article in articles:
         text.append(article.text)
     text = ' '.join(text)
-    return wordcloud(text, scale)
-
-
-@app.route('/wordcloud')
-def daywordcloud():
-    """Generate a wordcloud for today's articles, or the last 15 articles"""
-    t = time.time()
-    scale = request.args.get('scale', default=5)
-    try:
-        scale = int(width)
-        app.logger.info(scale)
-    except:
-        scale = 5
-    articles = Article.query.filter(Article.date==date.today()).all()
-    t = timing(t, "getting articles")
-
-    text = []
-    for article in articles:
-        text.append(article.text)
-    text = ' '.join(text)
-    t = timing(t, "joining text")
-    return wordcloud(text, 1, width=1000, height=500, POS=['NNP', 'NNPS', 'NN',
-                                                           'NN'])
+    return send_file(wordcloud(text, scale), mimetype='image/png')
 
 
 DIRECTIONS = {'asc': asc, 'desc': desc}
