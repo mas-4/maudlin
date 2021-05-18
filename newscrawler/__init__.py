@@ -39,4 +39,3 @@ app.jinja_env.globals.update(clamp=utils.clamp)
 app.jinja_env.globals.update(round=round)
 
 from newscrawler import routes, models, errors
-

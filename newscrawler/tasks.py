@@ -22,7 +22,7 @@ def make_wordcloud_today():
 CELERYBEAT_SCHEDULE = {
     'make_wordcloud_today': {
         'task': 'newscrawler.tasks.make_wordcloud_today',
-        'schedule': 10.0
+        'schedule': 10 * 60
     },
 }
 
