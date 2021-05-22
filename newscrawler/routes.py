@@ -46,8 +46,8 @@ def index():
     pages = list(range(1, math.ceil(Agency.query.count() / PER_PAGE)+1))
     t = timing(t, "getting sorts and pages")
 
-    jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
     try:
+        jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
         jobs = jobs.json()
     except Exception as e:
         app.logger.info(e)
@@ -140,7 +140,7 @@ def wordcloud(text, scale, width=150, height=80, POS=POS):
     file_object.seek(0)
     timing(t, "generating image")
 
-    return file_object
+    return send_file(file_object, mimetype='image/png')
 
 
 @app.route('/agency/<agency>/wordcloud')
@@ -159,7 +159,28 @@ def agencywordcloud(agency):
     for article in articles:
         text.append(article.text)
     text = ' '.join(text)
-    return send_file(wordcloud(text, scale), mimetype='image/png')
+    return wordcloud(text, scale)
+
+
+@app.route('/wordcloud')
+def daywordcloud():
+    """Generate a wordcloud for today's articles, or the last 15 articles"""
+    t = time.time()
+    scale = request.args.get('scale', default=5)
+    try:
+        scale = int(width)
+        app.logger.info(scale)
+    except:
+        scale = 5
+    articles = Article.query.filter(Article.date==date.today()).all()
+    t = timing(t, "getting articles")
+
+    text = []
+    for article in articles:
+        text.append(article.text)
+    text = ' '.join(text)
+    t = timing(t, "joining text")
+    return wordcloud(text, 1, width=1280, height=720, POS=['NNP', 'NNPS', 'NN', 'NN'])
 
 
 DIRECTIONS = {'asc': asc, 'desc': desc}
