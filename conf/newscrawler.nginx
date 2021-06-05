@@ -1,8 +1,8 @@
 server {
     listen 80;
-    server_name home.stdwtr.io;
+    server_name srv.stdwtr.io;
     location / {
         include 	proxy_params;
-        proxy_pass	http://unix:/home/pi/newscrawler/newscrawler.sock;
+        proxy_pass	http://unix:/server/http/maudlin/newscrawler.sock;
     }
 }
