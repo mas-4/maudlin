@@ -105,7 +105,9 @@ class Article(Base):
     def todays_sentiment():
         """Get a mean of sentiment for all of today's articles."""
         articles = Article.query.filter(Article.date==date.today()).all()
-        return round(mean([a.sent for a in articles])*100, 2)
+        if articles:
+            return round(mean([a.sent for a in articles])*100, 2)
+        return 0
 
 
 class Agency(Base):
