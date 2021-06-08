@@ -17,8 +17,7 @@ class ReutersSpider(scrapy.Spider, BoilerPlateParser):
             item = self.prepopulate_item(response)
 
             tag = 'h1'
-            attrs = {'class': re.compile(r'ArticleHeader')}
-            title = soup.find(tag, attrs=attrs)
+            title = soup.find(tag)
             title = title.text.strip()
 
             tag = 'div'
