@@ -43,7 +43,7 @@ class AljazeeraSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            attrs = {'href': re.compile(r'/\d{4}/\d{1,2}/\d{2}/')}
+            attrs = {'href': re.compile(r'/\d{4}/\d{1,2}/\d{1,2}/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
                 yield response.follow(link, callback=self.parse)
