@@ -10,7 +10,7 @@
         {% if p == '...' %}
             <span>...</span>
         {% else %}
-            <li class="waves-effect {% if p==page %}active{% endif %}"><a href="{{ url_for("agencies", page=p) }}">{{ p }}</a></li>
+            <li class="waves-effect {% if p==page %}active{% endif %}"><a href="{{ url_for("agencies", page=p, sort=sort) }}">{{ p }}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
