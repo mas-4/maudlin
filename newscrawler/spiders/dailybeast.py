@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import scrapy
 import re
 from scrapy import signals
@@ -21,8 +22,7 @@ class DailybeastSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):
                 'h1', attrs={'class': re.compile('__title')}).text.strip()
             item['byline'] = soup.find('h4', class_='Byline__name').text.strip()
 
-            date = soup.find('time',
-                             class_='PublicationTime__pub-time')['datetime']
+            date = soup.find('time', class_='PublicationTime__pub-time')['datetime']
             date = parser.parse(date)
             item['date'] = date
 
@@ -40,4 +40,6 @@ class DailybeastSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             links = list(filter(lambda l: '/author/' not in l, links))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

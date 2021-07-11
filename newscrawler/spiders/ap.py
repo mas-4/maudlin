@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -19,8 +20,8 @@ class ApSpider(scrapy.Spider, BoilerPlateParser):
 
             tag = 'div'
             attrs = {'data-key': 'card-headline'}
-            title = soup.find(tag, attrs=attrs).h1
-            title = title.text.strip()
+            title = soup.find(tag, attrs=attrs)
+            title = title.h1.text.strip()
 
             tag = 'span'
             attrs = {'class': re.compile('Component-bylines')}
@@ -47,4 +48,11 @@ class ApSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'^/article/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
-                yield response.follow(link, callback=self.parse)
+                search = link.split('-')
+                search.pop(-1)
+                search = '-'.join(search)
+                if Article.query.filter(Article.url.ilike('%' + search + '%')).first():
+                    continue
+                else:
+                    print(("link, <" + link + ">"))
+                    yield response.follow(link, callback=self.parse)

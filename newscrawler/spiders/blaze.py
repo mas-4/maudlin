@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -33,4 +34,6 @@ class BlazeSpider(scrapy.Spider, BoilerPlateParser):
             attrs={'href': re.compile(r'https://www.theblaze.com/news/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

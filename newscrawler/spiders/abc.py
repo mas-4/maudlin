@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -32,4 +33,6 @@ class AbcSpider(scrapy.Spider, BoilerPlateParser):
             root = soup.find('section', id='main-container')
             links = root.find_all('a', class_='black-ln')
             for link in links:
+                if Article.query.filter(Article.url.endswith(link['href'])).first():
+                    continue
                 yield response.follow(link['href'], callback=self.parse)

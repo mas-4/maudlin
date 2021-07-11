@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -26,7 +27,8 @@ class HillSpider(scrapy.Spider, BoilerPlateParser):
             if date:
                 date = parser.parse(date.text.strip().replace('.', ':'))
             else:
-                date = None
+                date = soup.find('meta', attrs={'property': 'article:published_time'})['content']
+                date = parser.parse(date)
             item['date'] = date
 
             story = soup.find('div', attrs={'class': 'field-items'})
@@ -43,5 +45,7 @@ class HillSpider(scrapy.Spider, BoilerPlateParser):
             attrs={'href': re.compile('/\d{6}[-0-9a-z]+$')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 if 'shopping' not in link:
                     yield response.follow(link, callback=self.parse)

@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -30,4 +31,7 @@ class CnnSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         for article in response.css('li > a::attr(href)'):
-            yield response.follow(article, callback=self.parse)
+            link = article.get()
+            if Article.query.filter(Article.url.endswith(link)).first():
+                continue
+            yield response.follow(link, callback=self.parse)

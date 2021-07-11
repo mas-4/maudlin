@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -46,4 +47,6 @@ class NypostSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'/\d{4}/\d{2}/\d{2}/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

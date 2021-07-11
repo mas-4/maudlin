@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -33,4 +34,6 @@ class ViceSpider(scrapy.Spider, BoilerPlateParser):
             attrs={'class': 'vice-card-hed__link'}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

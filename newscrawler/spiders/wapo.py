@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -31,7 +32,7 @@ class WapoSpider(scrapy.Spider, BoilerPlateParser):
             byline = soup.find('span', attrs={'data-sc-c': 'author'})
             item['byline'] = byline.text.strip()
 
-            date = soup.find('div', attrs={'data-qa':'timestamp'}).text.strip()
+            date = soup.find('meta', attrs={'property':'article:published_time'})['content'].strip()
             date = parser.parse(date)
             item['date'] = date
 
@@ -45,4 +46,6 @@ class WapoSpider(scrapy.Spider, BoilerPlateParser):
             attrs={'href': re.compile(r'^https://www.washingtonpost.com/.*story\.html$')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse, headers=headers)

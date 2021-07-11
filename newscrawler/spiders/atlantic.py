@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -18,7 +19,7 @@ class AtlanticSpider(scrapy.Spider, BoilerPlateParser):
             item = self.prepopulate_item(response)
 
             tag = 'h1'
-            attrs = {'class': re.compile('ArticleHeader')}
+            attrs = {'class': re.compile('ArticleTitle')}
             title = soup.find(tag, attrs=attrs)
             if not title:
                 title = soup.find('h1', class_='hed')
@@ -30,14 +31,21 @@ class AtlanticSpider(scrapy.Spider, BoilerPlateParser):
             byline = re.sub('  +', ' ', byline.text.strip()) if byline else None
 
             tag = 'time'
-            attrs = {'class': re.compile('ArticleDateline')}
+            attrs = {'class': re.compile('ArticleTimestamp')}
             date = soup.find(tag, attrs)
-            if date:
-                date = date.text.strip()
+            date = date.text.strip()
+            try:
+                date = parser.parse(date)
+            except:
+                tag = 'meta'
+                attrs = {'property': 'article:published_time'}
+                date = soup.find(tag, attrs)
+                date = date['content'].strip()
                 date = parser.parse(date)
 
+
             tag = 'section'
-            attrs = {'class': re.compile('ArticleContent')}
+            attrs = {'class': re.compile('ArticleBody')}
             root = soup.find(tag, attrs=attrs)
             paragraphs = root.find_all('p')
             text = self.joinparagraphs(paragraphs)
@@ -52,4 +60,6 @@ class AtlanticSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'/archive/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

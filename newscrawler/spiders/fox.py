@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -43,4 +44,6 @@ class FoxSpider(scrapy.Spider, BoilerPlateParser):
             links = set(a['href'] for a in root.find_all('a', attrs=attrs))
             for link in links:
                 if '/cartoons-slideshow' not in link:
+                    if Article.query.filter(Article.url.endswith(link)).first():
+                        continue
                     yield response.follow(link, callback=self.parse)

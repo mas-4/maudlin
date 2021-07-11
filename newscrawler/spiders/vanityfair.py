@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup as BS
 from newscrawler.mixins import BoilerPlateParser
 from dateutil import parser
 
+from newscrawler.models import Article
+
 
 class VanityfairSpider(scrapy.Spider, BoilerPlateParser):
     name = 'vanityfair'
@@ -46,4 +48,6 @@ class VanityfairSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'news/\d{4}')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

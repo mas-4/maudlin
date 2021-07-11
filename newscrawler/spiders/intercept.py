@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -15,7 +16,10 @@ class InterceptSpider(scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('h1', class_='Post-title').text.strip()
+            try:
+                item['title'] = soup.find('h1', class_='Post-title').text.strip()
+            except:
+                item['title'] = soup.find('h1', class_='Post-feature-title').text.strip()
             byline = soup.find('div', class_='PostByline-names')
             item['byline'] = re.sub('  +', ' ', byline.text.strip())
 
@@ -32,4 +36,7 @@ class InterceptSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'^/\d{4}/\d{2}/\d{2}/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                link = link.split('?')[0]
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

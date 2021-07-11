@@ -1,3 +1,5 @@
+import re
+from newscrawler.models import Article
 import scrapy
 from scrapy import signals
 from time import sleep
@@ -19,9 +21,21 @@ class PoliticoSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('h2', class_='headline').text.strip()
-            item['byline'] = soup.find('p', class_='story-meta__authors')\
-                .span.text.strip()
+            title = soup.find('h2', class_='headline')
+            if not title:
+                title = soup.find('span', attrs={'itemprop': 'headline'})
+            if not title:
+                title = soup.find('header')
+            item['title'] = title.text.strip()
+            byline = soup.find('p', class_='story-meta__authors')
+            if byline:
+                byline = byline.span
+            else:
+                byline = soup.find('p', attrs={'rel': 'author'})
+            if byline:
+                item['byline'] = byline.text.strip()
+            else:
+                item['byline'] = None
 
             date = soup.find('time')['datetime']
             date = parser.parse(date)
@@ -34,10 +48,13 @@ class PoliticoSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            links = soup.find_all('a')
-            for a in links:
-                try:
-                    if a['href'].startswith(self.special):
-                        yield response.follow(a['href'], callback=self.parse)
-                except:
+            attrs = {'href': re.compile(r'/\d{4}/\d{2}/\d{2}/')}
+            links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
+            for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
                     continue
+                if '/video/' in link:
+                    continue
+                if '/cartoons/' in link:
+                    continue
+                yield response.follow(link, callback=self.parse)

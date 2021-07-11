@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -37,4 +38,10 @@ class NbcSpider(scrapy.Spider, BoilerPlateParser):
                 except:
                     continue
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
+                if '/video/' in link:
+                    continue
+                if '/live/' in link:
+                    continue
                 yield response.follow(link, callback=self.parse)

@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -33,7 +34,13 @@ class BusinessinsiderSpider(scrapy.Spider, BoilerPlateParser):
             tag = 'div'
             attrs = {'class': 'byline-timestamp'}
             date = soup.find(tag, attrs)
-            date = date['data-timestamp']
+            if date:
+                date = date['data-timestamp']
+            else:
+                tag = 'span'
+                attrs = {'class': 'news-post-quotetime'}
+                date = soup.find(tag, attrs)
+                date = date.text.strip()
             date = parser.parse(date)
 
             tag = 'div'
@@ -50,4 +57,6 @@ class BusinessinsiderSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'[-0-9]{7,8}')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

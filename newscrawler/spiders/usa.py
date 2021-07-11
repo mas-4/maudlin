@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -49,5 +50,9 @@ class UsaSpider(scrapy.Spider, BoilerPlateParser):
             href = re.compile('/\d{4}/\d{2}/\d{2}/')
             links = set(a['href'] for a in soup.find_all('a', attrs={'href': href}))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
+                if '/restricted/' in link:
+                    continue
                 if 'picture-gallery' not in link:
                     yield response.follow(link, callback=self.parse)

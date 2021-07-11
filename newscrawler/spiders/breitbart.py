@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -30,8 +31,12 @@ class BreitbartSpider(scrapy.Spider, BoilerPlateParser):
             item['text'] = text
             yield item
 
-        if response.url == self.start_urls[0]:
+        elif response.url == self.start_urls[0]:
             attrs={'href': re.compile(r'/\d{4}/\d{2}/\d{2}/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
-                yield response.follow(link, callback=self.parse)
+                link = link.split('#')[0].strip()
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
+                else:
+                    yield response.follow(link, callback=self.parse)

@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -17,7 +18,8 @@ class TbtSpider(scrapy.Spider, BoilerPlateParser):
             item = self.prepopulate_item(response)
 
             title = (soup.find('h1', class_='article__headline') or
-                     soup.find('div', class_='opinion__headline'))
+                     soup.find('div', class_='opinion__headline') or
+                     soup.find('h1', class_='balance-text'))
             item['title'] = title.text.strip()
             byline = soup.find('a', class_=re.compile(r'article__byline--name'))
             if not byline:
@@ -38,4 +40,7 @@ class TbtSpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'/\d{4}/\d{2}/\d{2}/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
+                link = link.split('?')[0]
+                if Article.query.filter(Article.url.like('%' + link + '%')).first():
+                    continue
                 yield response.follow(link, callback=self.parse)

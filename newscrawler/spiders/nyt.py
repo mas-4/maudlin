@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import scrapy
 from dateutil import parser
 from bs4 import BeautifulSoup as BS
@@ -14,11 +15,19 @@ class NytSpider(scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('h1', attrs={'data-test-id': 'headline'}).text.strip()
+            try:
+                item['title'] = soup.find('h1', attrs={'data-test-id': 'headline'}).text.strip()
+            except:
+                item['title'] = soup.find('h1', attrs={'data-testid': 'headline'}).text.strip()
             item['byline'] = soup.find('span', class_='last-byline').text.strip()
 
-            date = soup.find('time')['datetime'].strip()
-            date = parser.parse(date)
+            try:
+                date = soup.find('time')['datetime'].strip()
+                date = parser.parse(date)
+            except:
+                date = soup.find('meta', attrs={'property': 'article:published_time'})['content'].strip()
+                date = parser.parse(date)
+
             item['date'] = date
 
             story = soup.find('section', attrs={'name': 'articleBody'})
@@ -34,4 +43,8 @@ class NytSpider(scrapy.Spider, BoilerPlateParser):
             links = set([a['href'] for a in soup.find_all('a', attrs={'data-story': True})])
 
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
+                if '/interactive/' in link:
+                    continue
                 yield response.follow(link, callback=self.parse)

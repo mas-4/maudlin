@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from bs4 import BeautifulSoup as BS
@@ -34,4 +35,9 @@ class ForeignpolicySpider(scrapy.Spider, BoilerPlateParser):
             attrs = {'href': re.compile(r'^(https|/).*/\d{4}/\d{2}/\d{2}/')}
             links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
-                yield response.follow(link, callback=self.parse)
+                link = link.split('?')[0]
+                if Article.query.filter(Article.url.like('%' + link + '%')).first():
+                    continue
+                else:
+                    print("Not found, <"+link + ">")
+                    yield response.follow(link, callback=self.parse)

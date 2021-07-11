@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from datetime import date as dt
@@ -21,11 +22,18 @@ class GuardianSpider(scrapy.Spider, BoilerPlateParser):
             byline = soup.find('a', attrs={'rel': 'author'})
             item['byline'] = byline.text.strip() if byline else None
 
-            date = soup.find('label', attrs={'for': 'dateToggle'}).text.strip()
-            date = parser.parse(date.replace('.', ':'))
-            item['date'] = date
+            try:
+                date = soup.find('label', attrs={'for': 'dateToggle'}).text.strip()
+                date = parser.parse(date.replace('.', ':'))
+                item['date'] = date
+            except:
+                date = soup.find('meta', attrs={'property': 'article:published_time'})['content']
+                date = parser.parse(date)
+                item['date'] = date
 
             story = soup.find('div', attrs={'class': re.compile('article-body')})
+            if not story:
+                story = soup.find('div', class_='from-content-api')
             paragraphs = story.find_all('p')
             text = self.joinparagraphs(paragraphs)
             item['text'] = text
@@ -42,7 +50,10 @@ class GuardianSpider(scrapy.Spider, BoilerPlateParser):
                     continue
 
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
                 if (str(dt.today().year) in link
                         and '/live/' not in link
-                        and '/video/' not in link):
+                        and '/video/' not in link
+                        and '/gallery/' not in link):
                     yield response.follow(link, callback=self.parse)

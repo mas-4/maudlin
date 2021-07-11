@@ -1,3 +1,4 @@
+from newscrawler.models import Article
 import re
 import scrapy
 from dateutil import parser
@@ -39,4 +40,8 @@ class TelegraphSpider(scrapy.Spider, BoilerPlateParser):
             href = re.compile('/\d{4}/\d{2}/\d{2}/')
             links = set(a['href'] for a in soup.find_all('a', attrs={'href': href}))
             for link in links:
+                if Article.query.filter(Article.url.endswith(link)).first():
+                    continue
+                if 'final-live' or 'live-score' or 'cartoons' in link:
+                    continue
                 yield response.follow(link, callback=self.parse)
