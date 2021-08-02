@@ -3,7 +3,7 @@ Description=Gunicorn instance to serve newscrawler
 After=network.target
 
 [Service]
-User=mas
+User=maudlin
 Group=http
 WorkingDirectory=/server/http/maudlin
 Environment="PATH=/server/http/maudlin/.venv/bin"
