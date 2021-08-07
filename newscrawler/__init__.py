@@ -1,12 +1,16 @@
-import os, logging
+import logging
 from logging.handlers import RotatingFileHandler
+import os
+
 from flask import Flask
-from flaskext.markdown import Markdown
+from flask_caching import Cache
 from flask_sqlalchemy import SQLAlchemy
+from flaskext.markdown import Markdown
 from sassutils.wsgi import SassMiddleware
-from newscrawler.config import Config
+
 from newscrawler import utils
-from flask import Flask
+from newscrawler.config import Config
+
 from .utils import make_celery
 
 app = Flask(__name__)
@@ -14,7 +18,8 @@ app.config.from_object(Config)
 
 db = SQLAlchemy(app)
 md = Markdown(app, safe_mode=True, output_format='html4')
-celery_app = make_celery(app)
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
+
 app.wsgi_app = SassMiddleware(
     app.wsgi_app,
     { 'newscrawler': ('static/sass', 'static/css', '/static/css') })
@@ -38,4 +43,4 @@ app.jinja_env.globals.update(color=utils.color)
 app.jinja_env.globals.update(clamp=utils.clamp)
 app.jinja_env.globals.update(round=round)
 
-from newscrawler import routes, models, errors
+from newscrawler import routes # this should never be at the top (circular)

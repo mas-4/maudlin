@@ -1,15 +1,20 @@
-import math, io, string, time, os
-import requests as rq
 from datetime import date
-from flask import (render_template, send_file, request, current_app, abort,
-                   url_for)
-from sqlalchemy import func, asc, desc
-from newscrawler import app, db
+import io
+import math
+import os
+import string
+import time
+
+from PIL import Image
+from flask import abort, current_app, render_template, request, send_file, url_for
+import nltk
+import requests as rq
+from sqlalchemy import asc, desc, func
+from wordcloud import STOPWORDS, WordCloud
+
+from newscrawler import app, db, cache
 from newscrawler.models import Agency, Article
 from newscrawler.utils import pagination
-from wordcloud import WordCloud, STOPWORDS
-from PIL import Image
-import nltk
 
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
@@ -152,6 +157,7 @@ def wordcloud(text, scale, width=150, height=80, POS=POS):
 
 
 @app.route('/agency/<agency>/wordcloud')
+@cache.cached(timeout=60*60*2)
 def agencywordcloud(agency):
     """Generate a wordcloud for today's articles, or the last 15 articles"""
     scale = request.args.get('scale', default=5)
