@@ -16,6 +16,7 @@
             {% endfor %}
         </ul>
     {% endif %}
+    <img src='{{ config['WORDCLOUD_URL'] }}' />
     <ul class="pagination">
         {% for s in sorts %}
             <li class="{% if sort==s %}active{% endif %} waves-effect"><a href="{{ url_for('index', sort=s) }}">{{ s }}</a></li>

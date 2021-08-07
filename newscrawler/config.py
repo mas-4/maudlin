@@ -22,3 +22,5 @@ class Config(object):
     CACHE_TYPE = "SimpleCache"  # Flask-Caching related configs
     CACHE_DEFAULT_TIMEOUT = 300
     CELERY_BROKER_URL = 'redis://localhost/1'
+
+    WORDCLOUD_URL = 'https://maudlin.standingwater.io/wc/wordcloud.png'

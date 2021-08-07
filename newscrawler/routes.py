@@ -170,27 +170,6 @@ def agencywordcloud(agency):
     return wordcloud(text, scale)
 
 
-@app.route('/wordcloud')
-def daywordcloud():
-    """Generate a wordcloud for today's articles, or the last 15 articles"""
-    t = time.time()
-    scale = request.args.get('scale', default=5)
-    try:
-        scale = int(width)
-        app.logger.info(scale)
-    except:
-        scale = 5
-    articles = Article.query.filter(Article.date==date.today()).all()
-    t = timing(t, "getting articles")
-
-    text = []
-    for article in articles:
-        text.append(article.text)
-    text = ' '.join(text)
-    t = timing(t, "joining text")
-    return wordcloud(text, 1, width=1280, height=720, POS=['NNP', 'NNPS', 'NN', 'NN'])
-
-
 DIRECTIONS = {'asc': asc, 'desc': desc}
 def get_args(request):
     page = request.args.get('page', default='1')
