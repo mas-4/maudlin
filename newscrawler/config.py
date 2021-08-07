@@ -16,6 +16,8 @@ class Config(object):
     SQLALCHEMY_ECHO = False
     SCRAPY_URL = os.environ.get('SCRAPY_URL') or \
         'http://localhost:6800'
+    SCRAPY_USR = os.environ.get('SCRAPY_USR') or 'Yeah right.'
+    SCRAPY_PWD = os.environ.get('SCRAPY_PWD') or "Seriously, c'mon"
 
     CACHE_TYPE = "SimpleCache"  # Flask-Caching related configs
     CACHE_DEFAULT_TIMEOUT = 300

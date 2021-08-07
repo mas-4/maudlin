@@ -47,8 +47,11 @@ def index():
     t = timing(t, "getting sorts and pages")
 
     try:
-        jobs = rq.get(current_app.config['SCRAPY_URL'] + '/listjobs.json?project=newscrawler')
-        jobs = jobs.json()
+        route = '/listjobs.json?project=newscrawler'
+        url = current_app.config['SCRAPY_URL'] + route
+        usr = current_app.config['SCRAPY_USR']
+        pwd = current_app.config['SCRAPY_PWD']
+        jobs = rq.get(url, auth=(usr,pwd)).json()
     except Exception as e:
         app.logger.info(e)
         jobs = {'running': []}
