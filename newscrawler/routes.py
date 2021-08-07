@@ -118,7 +118,7 @@ POS = [
     'FW', 'JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'RB',
     'RBR', 'RBS', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VNP', 'VBZ']
 
-def wordcloud(text, scale, width=150, height=80, POS=POS):
+def rawwordcloud(text, scale, width=150, height=80, POS=POS):
     t = time.time()
     tokenized = nltk.word_tokenize(text)
     tokenized = nltk.pos_tag(tokenized)
@@ -138,10 +138,15 @@ def wordcloud(text, scale, width=150, height=80, POS=POS):
 
     # Make image
     img = Image.fromarray(wordcloud.astype('uint8'))
+    timing(t, "generating image")
+    return img
+
+
+def wordcloud(text, scale, width=150, height=80, POS=POS):
+    img = rawwordcloud(text, scale, width, height, POS)
     file_object = io.BytesIO()
     img.save(file_object, 'PNG')
     file_object.seek(0)
-    timing(t, "generating image")
 
     return send_file(file_object, mimetype='image/png')
 
