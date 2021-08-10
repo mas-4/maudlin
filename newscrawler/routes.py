@@ -115,7 +115,8 @@ def agency(agency):
 
 stopwords = list(STOPWORDS)
 # clean some default words
-stopwords.extend(['say', 'said', 'says', "n't", 'Mr', 'Ms', 'Mrs'])
+stopwords.extend(['say', 'said', 'says', "n't", 'Mr', 'Ms', 'Mrs', 'time',
+    'year', 'week', 'month'])
 # strip stray letters
 stopwords.extend([l for l in string.ascii_lowercase + string.ascii_uppercase])
 # Parts of Speech to keep
