@@ -46,7 +46,6 @@ def pagination(c, m):
 
     return rangeWithDots
 
-
 def make_celery(app):
     celery = Celery(
         app.import_name,
@@ -61,4 +60,3 @@ def make_celery(app):
 
     celery.Task = ContextTask
     return celery
-
