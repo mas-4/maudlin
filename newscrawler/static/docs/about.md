@@ -27,7 +27,7 @@ VPS.
 The wordclouds are also generated on my local server, and archived there, but
 pushed via SCP in a crontab to the VPS.
 
-All of the code is available in my repo [mas-4/news-sentiment-analysis][1]. Feel
+All of the code is available in my repo [mas-4/maudlin][1]. Feel
 free to fork or submit pull requests.
 
 For the time being I'm calling the site Maudlin, but not really doing much with
@@ -53,4 +53,4 @@ are neutral words." The result may seem strange when Breitbart appears at the
 top for now of neutrality.
 
 [0]: https://www.nltk.org/_modules/nltk/sentiment/vader.html
-[1]: https://github.com/mas-4/news-sentiment-analysis
+[1]: https://github.com/mas-4/maudlin
