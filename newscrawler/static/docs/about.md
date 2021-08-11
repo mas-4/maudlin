@@ -12,31 +12,45 @@ calculate a fifth score I call sentiment which is just positivity minus
 negativity. The result is a bit more gradated than compound, but also closer to
 the center of the axis [-100, 100].
 
-The site and scrapers are running on a Raspberry Pi 4 in my bedroom right now,
-because it's a personal project. This may become prohibitively problematic given
-the network's upload speed if people start liking the site. Expect downtime at
-that point as I migrate to a real VPS.
+The website itself (and the database) have seen a bit of migration over the past
+six months. It started on a Raspberry Pi 4 with a 4 terabyte external hard drive
+in my bedroom. After I essentially fried the Pi with a memory leak due to never
+closing Chromium when running it in headless mode through Selenium, I migrated
+to a desktop PC running headless Arch Linux, and thence to a Basic Droplet from
+Digital Ocean.
 
-All of the code is available in my repo [malan88/news-sentiment-analysis][1].
-Feel free to fork or submit pull requests.
+Right now, the site itself, and the Postgres database, are running on the
+droplet, while the Spiders are running on that headless Arch PC pointed at the
+VPS for connecting to the database. This saves me some processing time on the
+VPS.
+
+The wordclouds are also generated on my local server, and archived there, but
+pushed via SCP in a crontab to the VPS.
+
+All of the code is available in my repo [mas-4/news-sentiment-analysis][1]. Feel
+free to fork or submit pull requests.
 
 For the time being I'm calling the site Maudlin, but not really doing much with
 it. The styling is rudimentary because I don't care about it right now.
 
 ## A Few More Notes
 
-There are some weird quirks with the sentiment. First, Fox seems more positive
-I think because it's advertising heavy. I'd like to work on it's scraper to
-eliminate that. But "Click" shows up in its wordcloud specifically because it
-appears so often within the text of the article with their advertising.
+There are some weird quirks with the sentiment.
 
-I've also just flat out seen some scores I disagree with, but I'll have to dig
-into the articles more and perhaps investigate tuning the model, if possible.
+First, Fox seems more positive I think because it's advertising heavy. I'd like
+to work on its scraper to eliminate that. But "Click" shows up in its wordcloud
+specifically because it appears so often within the text of the article with
+their advertising. **(Update 8/11/21, I've mitigated this by adding certain stop
+words to the wordcloud generator, and I believe fixing the scraper itself)**
 
-Also note, neutrality is ***NOT*** a score of journalistic neutrality but
+I've also just flat out seen some scores I disagree with (a cheerful article
+that gets a bad score is not hard to recognize), but I'll have to dig into the
+articles more and perhaps investigate tuning the model, if possible.
+
+Also note, neutrality is **_NOT_** a score of journalistic neutrality but
 basically a neutral tone. I imagine it's closer to "percentage of document that
-are neutral words." The result may be strange, when Breitbart appears at the top
-for now of neutrality.
+are neutral words." The result may seem strange when Breitbart appears at the
+top for now of neutrality.
 
 [0]: https://www.nltk.org/_modules/nltk/sentiment/vader.html
-[1]: https://github.com/malan88/news-sentiment-analysis
+[1]: https://github.com/mas-4/news-sentiment-analysis
