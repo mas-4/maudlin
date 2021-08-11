@@ -158,3 +158,4 @@ setup.py
 .env
 logs
 *.ipynb
+scrapy.cfg
