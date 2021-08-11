@@ -195,6 +195,7 @@ def get_args(request):
 
     return page, sort, direction, dirfunc, per_page
 
+
 @app.route('/articles')
 def articles():
     """A table of all articles"""
@@ -237,3 +238,9 @@ def docs(doc):
     except:
         abort(404)
     return render_template('docs.html', doc=f, active='doc')
+
+
+@app.route('/status')
+def status():
+    agencies = Agency.query.order_by(Agency.name).all()
+    return render_template('status.html', agencies=agencies, title='Status')

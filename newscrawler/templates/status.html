@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="highlight">
+  <thead>
+    <tr>
+      <th>Agency</th>
+      <th>Articles Today</th>
+      <th>Total Articles</th>
+      <th>Last Article Date</th>
+      <th>Sentiment Today</th>
+      <th>Neutrality Today</th>
+      <th>Sentiment Overall</th>
+      <th>Neutrality Overall</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for agency in agencies %}
+    <tr>
+      <td>{{ agency.name }}</td>
+      <td>{{ agency.todays_articles.count() }}</td>
+      <td>{{ agency.articles.count() }}</td>
+      <td>{{ agency.last_article.date }}</td>
+      <td>{{ agency.todays_sentiment }}</td>
+      <td>{{ agency.todays_neutrality }}</td>
+      <td>{{ agency.cumulative_sentiment }}</td>
+      <td>{{ agency.cumulative_neutrality }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

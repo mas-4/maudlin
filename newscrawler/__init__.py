@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -38,9 +39,7 @@ app.logger.setLevel(logging.INFO)
 app.logger.info('Newscrawler startup')
 app.logger.info(Config.SQLALCHEMY_DATABASE_URI)
 
-app.jinja_env.globals.update(len=len)
-app.jinja_env.globals.update(color=utils.color)
-app.jinja_env.globals.update(clamp=utils.clamp)
-app.jinja_env.globals.update(round=round)
+app.jinja_env.globals.update(len=len, color=utils.color, clamp=utils.clamp,
+                             round=round, dt=dt)
 
 from newscrawler import routes # this should never be at the top (circular)

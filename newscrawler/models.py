@@ -146,7 +146,7 @@ class Agency(Base):
     @property
     def todays_articles(self):
         return self.articles.filter(Article.date==date.today())\
-            .order_by(Article.sent.desc()).all()
+            .order_by(Article.sent.desc())
 
     @property
     def todays_sentiment(self):
@@ -168,6 +168,10 @@ class Agency(Base):
     def todays_count(self):
         """Count of today's articles for the agency"""
         return self.articles.filter(Article.date==date.today()).count()
+
+    @property
+    def last_article(self):
+        return self.articles.order_by(Article.date.desc()).first()
 
     def reaccumulate(self):
         """Recalculate the cum_sent and cum_neut for the agency. Because of the

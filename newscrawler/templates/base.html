@@ -25,6 +25,7 @@ gtag('config', 'G-MZCVWTZ2M5');
                     <li {% if active=='index' %}class="active"{% endif %}><a href="{{ url_for('index') }}">Home</a></li>
                     <li {% if active=='agencies' %}class="active"{% endif %}><a href="{{ url_for('agencies') }}">Agencies</a></li>
                     <li {% if active=='articles' %}class="active"{% endif %}><a href="{{ url_for('articles') }}">Articles</a></li>
+                    <li {% if active=='status' %}class="active"{% endif %}><a href="{{ url_for('status') }}">Status</a></li>
                     <li {% if active=='about' %}class="active"{% endif %}><a href="{{ url_for('docs', doc='about') }}">About</a></li>
                     <li {% if active=='roadmap' %}class="active"{% endif %}><a href="{{ url_for('docs', doc='roadmap') }}">Roadmap</a></li>
                 </ul>
