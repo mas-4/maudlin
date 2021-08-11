@@ -42,6 +42,6 @@ class TelegraphSpider(scrapy.Spider, BoilerPlateParser):
             for link in links:
                 if Article.query.filter(Article.url.endswith(link)).first():
                     continue
-                if 'final-live' or 'live-score' or 'cartoons' in link:
+                if 'final-live' in link or 'live-score' in link or 'cartoons' in link:
                     continue
                 yield response.follow(link, callback=self.parse)
