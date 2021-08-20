@@ -1,3 +1,5 @@
+from datetime import datetime as dt
+
 from celery import Celery
 
 def clamp(n, smallest, largest): return max(smallest, min(n, largest))
@@ -60,3 +62,8 @@ def make_celery(app):
 
     celery.Task = ContextTask
     return celery
+
+def log_failure(*args):
+    from newscrawler.config import Config
+    with open(Config.LogFailPath, 'at') as fout:
+        fout.write(' : '.join(str(dt.now()), *args))

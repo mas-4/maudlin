@@ -24,3 +24,4 @@ class Config(object):
     CELERY_BROKER_URL = 'redis://localhost/1'
 
     WORDCLOUD_URL = 'https://maudlin.standingwater.io/wc/wordcloud.png'
+    LogFailPath = '/failures.txt'
