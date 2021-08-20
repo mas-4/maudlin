@@ -1,9 +1,11 @@
-from newscrawler.models import Article
 import re
-import scrapy
+
 from bs4 import BeautifulSoup as BS
-from newscrawler.mixins import BoilerPlateParser
 from dateutil import parser
+import scrapy
+
+from newscrawler.mixins import BoilerPlateParser
+from newscrawler.models import Article
 
 
 class NypostSpider(scrapy.Spider, BoilerPlateParser):

@@ -1,9 +1,11 @@
-from newscrawler.models import Article
-import scrapy
 from datetime import date as dt
-from dateutil import parser
+
 from bs4 import BeautifulSoup as BS
+from dateutil import parser
+import scrapy
+
 from newscrawler.mixins import BoilerPlateParser
+from newscrawler.models import Article
 
 
 class SlateSpider(scrapy.Spider, BoilerPlateParser):

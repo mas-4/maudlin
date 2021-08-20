@@ -1,10 +1,12 @@
-from newscrawler.models import Article
 import re
-import scrapy
 from time import sleep
+
 from bs4 import BeautifulSoup as BS
-from newscrawler.mixins import BoilerPlateParser, SeleniumMixin
 from dateutil import parser
+import scrapy
+
+from newscrawler.mixins import BoilerPlateParser, SeleniumMixin
+from newscrawler.models import Article
 
 
 class TimeSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):

@@ -1,11 +1,13 @@
 import re
-from newscrawler.models import Article
+from time import sleep
+
+from bs4 import BeautifulSoup as BS
+from dateutil import parser
 import scrapy
 from scrapy import signals
-from time import sleep
-from dateutil import parser
-from bs4 import BeautifulSoup as BS
+
 from newscrawler.mixins import BoilerPlateParser, SeleniumMixin
+from newscrawler.models import Article
 
 
 class PoliticoSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):

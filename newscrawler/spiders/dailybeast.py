@@ -1,11 +1,13 @@
-from newscrawler.models import Article
-import scrapy
 import re
-from scrapy import signals
 from time import sleep
-from dateutil import parser
+
 from bs4 import BeautifulSoup as BS
+from dateutil import parser
+import scrapy
+from scrapy import signals
+
 from newscrawler.mixins import BoilerPlateParser, SeleniumMixin
+from newscrawler.models import Article
 
 
 class DailybeastSpider(SeleniumMixin, scrapy.Spider, BoilerPlateParser):

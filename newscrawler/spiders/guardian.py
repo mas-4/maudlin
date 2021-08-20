@@ -1,10 +1,12 @@
-from newscrawler.models import Article
-import re
-import scrapy
 from datetime import date as dt
-from dateutil import parser
+import re
+
 from bs4 import BeautifulSoup as BS
+from dateutil import parser
+import scrapy
+
 from newscrawler.mixins import BoilerPlateParser
+from newscrawler.models import Article
 
 
 class GuardianSpider(scrapy.Spider, BoilerPlateParser):
