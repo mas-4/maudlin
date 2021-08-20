@@ -18,19 +18,18 @@ class NypostSpider(scrapy.Spider, BoilerPlateParser):
             item = self.prepopulate_item(response)
 
             tag = 'h1'
-            attrs = {'class': re.compile('postid')}
+            attrs = {'class': re.compile('headline')}
             title = soup.find(tag, attrs=attrs)
             title = title.text.strip()
 
             tag = 'p'
             attrs = {'class': 'byline'}
-            byline = soup.find(tag, attrs=attrs).a
-            byline = re.sub('  +', ' ', byline.text.strip()) if byline else None
+            byline = None
 
-            tag = 'p'
-            attrs = {'class': 'byline-date'}
+            tag = 'meta'
+            attrs = {'property': 'article:published_time'}
             date = soup.find(tag, attrs)
-            date = date.text.strip().split('|')[0]
+            date = date['content']
             date = parser.parse(date)
 
             tag = 'div'
