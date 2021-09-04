@@ -1,3 +1,5 @@
+import re
+
 from bs4 import BeautifulSoup as BS
 from dateutil import parser
 import scrapy
@@ -32,7 +34,8 @@ class AbcSpider(scrapy.Spider, BoilerPlateParser):
 
         if response.url == self.start_urls[0]:
             root = soup.find('section', id='main-container')
-            links = root.find_all('a', class_='black-ln')
+            links = soup.find_all('a', attrs={'class': 'AnchorLink', 'href': re.compile(r'http.*\d?id=\d+$')})
+
             for link in links:
                 if Article.query.filter(Article.url.endswith(link['href'])).first():
                     continue
