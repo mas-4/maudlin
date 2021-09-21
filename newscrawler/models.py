@@ -124,11 +124,7 @@ class Agency(Base):
     # every new article. `reaccumulate()` recalculates these.
     cum_sent = db.Column(db.Float, default=0.0, nullable=False)
     cum_neut = db.Column(db.Float, default=0.0, nullable=False)
-    last_article_id = db.Column(db.Integer, db.ForeignKey('article.id',
-                                                          use_alter=True))
-    last_article = db.relationship(
-        'Article',
-        primaryjoin='Article.agency_id==foreign(Agency.last_article_id)')
+    last_date = db.Column(db.Date)
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({self.articles.count()}) articles>'
