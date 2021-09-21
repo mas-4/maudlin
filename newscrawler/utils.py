@@ -78,4 +78,4 @@ def timing(t, task):
     return now
 
 def speedround(ls):
-    return round(mean(ls)*100, 2)
+    return round(mean(ls), 2)

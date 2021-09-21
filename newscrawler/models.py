@@ -106,10 +106,10 @@ class Article(Base):
     def todays_sentiment():
         """Get a mean of sentiment for all of today's articles."""
         t = time.time()
-        articles = Article.query.filter(Article.date==date.today()).all()
+        sentiment = db.session.query(db.func.avg(Article.sent)).filter(Article.date==date.today()).all()
         timing(t, "article.todays_sentiment")
-        if articles:
-            return round(mean([a.sent for a in articles])*100, 2)
+        if sentiment:
+            return round(sentiment[0][0]*100, 2)
         return 0
 
 
