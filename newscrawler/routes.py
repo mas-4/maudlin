@@ -4,6 +4,7 @@ import json
 import math
 import string
 import time
+import traceback
 
 from PIL import Image
 from flask import abort, render_template, request, send_file, url_for
@@ -173,9 +174,11 @@ def agencywordcloud(agency):
     scale = request.args.get('scale', default=5)
     try:
         scale = int(scale)
-        app.logger.info(scale)
+        app.logger.info("Agency wordcloud scale: " + str(scale))
     except:
         scale = 5
+        traceback.print_exc()
+        app.logger.info("Agency wordcloud scale: " + str(scale))
     agency = Agency.query.filter(Agency.name == agency).first_or_404()
     articles = agency.articles.order_by(Article.date.desc()).limit(15).all()
 
