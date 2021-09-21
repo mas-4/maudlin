@@ -17,11 +17,11 @@
     {% for agency in agencies %}
     <tr>
       <td>{{ agency.name }}</td>
-      <td>{{ agency.todays_articles.count() }}</td>
+      <td>{{ agency.todays_articles_speed|length }}</td>
       <td>{{ agency.articles.count() }}</td>
       <td>{{ agency.last_article.date }}</td>
-      <td>{{ agency.todays_sentiment }}</td>
-      <td>{{ agency.todays_neutrality }}</td>
+      <td>{{ agency.todays_sentiment_speed }}</td>
+      <td>{{ agency.todays_neutrality_speed }}</td>
       <td>{{ agency.cumulative_sentiment }}</td>
       <td>{{ agency.cumulative_neutrality }}</td>
     </tr>

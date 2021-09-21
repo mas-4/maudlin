@@ -77,8 +77,15 @@ class NewscrawlerPipeline:
             db.session.commit()
             logging.info("Successfully committed:" + repr(article))
         except Exception as e:
-            logging.info(e)
+            logging.info("Failure on commit:" + str(e))
             logging.info(article)
             db.session.rollback()
+        try:
+            agency.last_article_id = article.id
+            db.session.commit()
+            logging.info("Successfully updated last_article on:" + repr(agency))
+        except Exception as e:
+            logging.info("Failure to update last_article:" + str(e))
+            logging.info(agency)
 
         return item

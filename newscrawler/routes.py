@@ -1,30 +1,22 @@
 from datetime import date
 import io
+import json
 import math
-import os
 import string
 import time
 
 from PIL import Image
-from flask import abort, current_app, render_template, request, send_file, url_for
+from flask import abort, render_template, request, send_file, url_for
 import nltk
-import requests as rq
-from sqlalchemy import asc, desc, func
+from sqlalchemy import asc, desc
 from wordcloud import STOPWORDS, WordCloud
 
-from newscrawler import app, db, cache
+from newscrawler import app, cache, db
 from newscrawler.models import Agency, Article
-from newscrawler.utils import pagination
+from newscrawler.utils import pagination, timing, speedround
 
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
-
-
-def timing(t, task):
-    """Helper function for timing tasks"""
-    now = time.time()
-    app.logger.info(f"{now-t} for {task}.")
-    return now
 
 
 @app.route('/')
@@ -52,11 +44,8 @@ def index():
     t = timing(t, "getting sorts and pages")
 
     try:
-        route = '/listjobs.json?project=newscrawler'
-        url = current_app.config['SCRAPY_URL'] + route
-        usr = current_app.config['SCRAPY_USR']
-        pwd = current_app.config['SCRAPY_PWD']
-        jobs = rq.get(url, auth=(usr,pwd)).json()
+        with open('/status.json', 'rt') as fin:
+            jobs = json.load(fin)
     except Exception as e:
         app.logger.info(e)
         jobs = {'running': []}
@@ -163,7 +152,7 @@ def agencywordcloud(agency):
     """Generate a wordcloud for today's articles, or the last 15 articles"""
     scale = request.args.get('scale', default=5)
     try:
-        scale = int(width)
+        scale = int(scale)
         app.logger.info(scale)
     except:
         scale = 5
@@ -242,5 +231,24 @@ def docs(doc):
 
 @app.route('/status')
 def status():
+    t = time.time()
     agencies = Agency.query.order_by(Agency.name).all()
+    ids = [a.id for a in agencies]
+    articles = Article.query.filter(Article.date==date.today(),
+                                    Article.agency_id.in_(ids)).all()
+    t = timing(t, "getting articles")
+    for article in articles:
+        if not hasattr(article.agency, 'todays_articles_speed'):
+            article.agency.todays_articles_speed = []
+        article.agency.todays_articles_speed.append(article)
+    t = timing(t, "hanging articles")
+    for agency in agencies:
+        try:
+            agency.todays_sentiment_speed = speedround([a.sentiment for a in agency.todays_articles_speed])
+            agency.todays_neutrality_speed = speedround([a.neutrality for a in agency.todays_articles_speed])
+        except:
+            agency.todays_sentiment_speed = 0.0
+            agency.todays_neutrality_speed = 0.0
+            agency.todays_articles_speed = []
+    t = timing(t, "Calculating todays stats")
     return render_template('status.html', agencies=agencies, title='Status')

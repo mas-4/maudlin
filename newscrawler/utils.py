@@ -1,4 +1,7 @@
 from datetime import datetime as dt
+import logging
+from statistics import mean
+import time
 
 from celery import Celery
 
@@ -67,3 +70,12 @@ def log_failure(*args):
     from newscrawler.config import Config
     with open(Config.LogFailPath, 'at') as fout:
         fout.write(' : '.join(str(dt.now()), *args))
+
+def timing(t, task):
+    """Helper function for timing tasks"""
+    now = time.time()
+    print(f"{now-t} for {task}.")
+    return now
+
+def speedround(ls):
+    return round(mean(ls)*100, 2)

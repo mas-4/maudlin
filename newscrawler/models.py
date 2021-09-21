@@ -1,8 +1,9 @@
+import time
 from datetime import date
 from statistics import mean
 from newscrawler import db
 from sqlalchemy.ext.declarative import declared_attr
-from newscrawler.utils import color, clamp
+from newscrawler.utils import color, clamp, timing
 
 def average(prev_avg, x, n):
     """Function for a streaming average"""
@@ -104,7 +105,9 @@ class Article(Base):
     @staticmethod
     def todays_sentiment():
         """Get a mean of sentiment for all of today's articles."""
+        t = time.time()
         articles = Article.query.filter(Article.date==date.today()).all()
+        timing(t, "article.todays_sentiment")
         if articles:
             return round(mean([a.sent for a in articles])*100, 2)
         return 0
@@ -121,6 +124,11 @@ class Agency(Base):
     # every new article. `reaccumulate()` recalculates these.
     cum_sent = db.Column(db.Float, default=0.0, nullable=False)
     cum_neut = db.Column(db.Float, default=0.0, nullable=False)
+    last_article_id = db.Column(db.Integer, db.ForeignKey('article.id',
+                                                          use_alter=True))
+    last_article = db.relationship(
+        'Article',
+        primaryjoin='Article.agency_id==foreign(Agency.last_article_id)')
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({self.articles.count()}) articles>'
@@ -145,8 +153,11 @@ class Agency(Base):
 
     @property
     def todays_articles(self):
-        return self.articles.filter(Article.date==date.today())\
+        t = time.time()
+        articles = self.articles.filter(Article.date==date.today())\
             .order_by(Article.sent.desc())
+        timing(t, "agency.todays_articles")
+        return articles
 
     @property
     def todays_sentiment(self):
@@ -167,11 +178,10 @@ class Agency(Base):
     @property
     def todays_count(self):
         """Count of today's articles for the agency"""
-        return self.articles.filter(Article.date==date.today()).count()
-
-    @property
-    def last_article(self):
-        return self.articles.order_by(Article.date.desc()).first()
+        t = time.time()
+        count = self.articles.filter(Article.date==date.today()).count()
+        timing(t, "agency.todays_count")
+        return count
 
     def reaccumulate(self):
         """Recalculate the cum_sent and cum_neut for the agency. Because of the
