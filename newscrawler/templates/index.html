@@ -31,19 +31,20 @@
         <ul class="collection with-header">
             <li class="collection-header">
                 <h4>
-                    <i class="medium material-icons circle" style="background-color: #{{ color(clamp(agency.todays_sentiment, -10, 10), [-10,10]) }}; color: white;">
+                    <i class="medium material-icons circle"
+                       style="background-color: #{{ color(clamp(agency.todays_sentiment_speed, -10, 10), [-10,10]) }}; color: white;">
                         {% if agency.cumulative_sentiment > 1 %}trending_up{% elif agency.cumulative_sentiment < -1 %}trending_down{% else %}trending_flat{% endif %}
                     </i>
                     <a href="{{ url_for("agency", agency=agency.name) }}">{{ agency.name.upper() }}</a>
                     today &times;{{ agency.todays_count }}
                     [
-                    <span style="color: #{{ color(agency.todays_sentiment) }}">{{ agency.todays_sentiment }}%</span>,
-                    <span style="color: #{{ color(clamp(agency.todays_neutrality, 70,100), [70,100], color1='808080', color2='0000FF') }}">{{ agency.todays_neutrality }}%</span>
+                    <span style="color: #{{ color(agency.todays_sentiment_speed) }}">{{ agency.todays_sentiment_speed }}%</span>,
+                    <span style="color: #{{ color(clamp(agency.todays_neutrality_speed, 70,100), [70,100], color1='808080', color2='0000FF') }}">{{ agency.todays_neutrality_speed }}%</span>
                     ]
                 </h4>
             <p>key: [ <b>sentiment</b> (positive minus negative), <b>neutrality</b>, <b>compound</b> ]</p>
             </li>
-            {% for article in agency.todays_articles %}
+            {% for article in agency.todays_articles_speed %}
                 <li class="collection-item avatar">
                     <i class="large material-icons circle" style="background-color: #{{ article.color }}">
                         {% if article.sentiment > 1 %}trending_up{% elif article.sentiment < -1 %}trending_down{% else %}trending_flat{% endif %}

@@ -52,18 +52,38 @@ def index():
     t = timing(t, "getting jobs")
 
     try:
-        agencies = sorts[sort].paginate(page, PER_PAGE)
+        agencies = sorts[sort].paginate(page, PER_PAGE).items
     except KeyError:
         abort(404)
+    t = timing(t, "getting agencies")
+    ids = [a.id for a in agencies]
+    articles = Article.query.filter(Article.date==date.today(),
+                                    Article.agency_id.in_(ids)).all()
     t = timing(t, "getting articles")
+    for article in articles:
+        if not hasattr(article.agency, 'todays_articles_speed'):
+            article.agency.todays_articles_speed = []
+        article.agency.todays_articles_speed.append(article)
+
+    t = timing(t, "hanging articles")
+    for agency in agencies:
+        try:
+            agency.todays_sentiment_speed = speedround([a.sentiment for a in agency.todays_articles_speed])
+            agency.todays_neutrality_speed = speedround([a.neutrality for a in agency.todays_articles_speed])
+        except:
+            agency.todays_sentiment_speed = 0.0
+            agency.todays_neutrality_speed = 0.0
+            agency.todays_articles_speed = []
+    t = timing(t, "calculating stats")
 
     html = render_template(
         'index.html',
         count=Article.query.filter(Article.date==date.today()).count(),
         dbcount=Article.query.count(),
-        agencies=agencies.items,
+        agencies=agencies,
         sorts=sorts, sort=sort, pages=pages, page=page,
-        overall=Article.todays_sentiment(), running=jobs['running'],
+        overall=Article.todays_sentiment(),
+        running=jobs['running'],
         active='index')
     timing(t, "rendering template")
     return html
