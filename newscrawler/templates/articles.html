@@ -21,9 +21,6 @@
                 {% with s='date' %}
                     {% include 'sort_line.html' %}
                 {% endwith %}
-                {% with s='byline' %}
-                    {% include 'sort_line.html' %}
-                {% endwith %}
                 {% with s='pos' %}
                     {% include 'sort_line.html' %}
                 {% endwith %}
@@ -48,7 +45,6 @@
                     <td>{{ article.agency.name.upper() }}</td>
                     <td style="max-width: 20rem;"><a href="{{ article.url }}">{{ article.title }}</a></td>
                     <td>{{ article.date }}</td>
-                    <td>{{ article.byline }}</td>
                     <td>{{ article.pos }}</td>
                     <td>{{ article.neg }}</td>
                     <td>{{ article.neu }}</td>
