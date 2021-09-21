@@ -1,3 +1,4 @@
+import re
 from bs4 import BeautifulSoup as BS
 from dateutil import parser
 import scrapy
@@ -16,8 +17,8 @@ class NbcSpider(scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('h1', class_='article-hero__headline').text.strip()
-            item['byline'] = soup.find('div', class_='article-byline__name').text.strip()
+            attrs = {'class': re.compile(r'headline')}
+            item['title'] = soup.find('h1', attrs=attrs).text.strip()
 
             date = soup.find('time')['datetime'].strip()
             date = parser.parse(date)
