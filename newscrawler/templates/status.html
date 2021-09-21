@@ -5,8 +5,10 @@
     <tr>
       <th>Agency</th>
       <th>Articles Today</th>
+      {#
       <th>Total Articles</th>
       <th>Last Article Date</th>
+      #}
       <th>Sentiment Today</th>
       <th>Neutrality Today</th>
       <th>Sentiment Overall</th>
@@ -18,8 +20,10 @@
     <tr>
       <td>{{ agency.name }}</td>
       <td>{{ agency.todays_articles_speed|length }}</td>
+      {#
       <td>{{ agency.articles.count() }}</td>
       <td>{{ agency.last_article.date }}</td>
+      #}
       <td>{{ agency.todays_sentiment_speed }}</td>
       <td>{{ agency.todays_neutrality_speed }}</td>
       <td>{{ agency.cumulative_sentiment }}</td>
