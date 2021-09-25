@@ -60,7 +60,8 @@ class NewscrawlerPipeline:
         agency.homepage = item['start']
 
         article.agency = agency
-        agency.last_date = article.date
+        if agency.last_date < article.date:
+            agency.last_date = article.date
 
         # calculate cumulative averages
         if created:
