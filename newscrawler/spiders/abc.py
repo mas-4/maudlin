@@ -33,7 +33,6 @@ class AbcSpider(scrapy.Spider, BoilerPlateParser):
             yield item
 
         if response.url == self.start_urls[0]:
-            root = soup.find('section', id='main-container')
             links = soup.find_all('a', attrs={'class': 'AnchorLink', 'href': re.compile(r'http.*\d?id=\d+$')})
 
             for link in links:
