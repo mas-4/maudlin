@@ -108,7 +108,7 @@ class Article(Base):
         t = time.time()
         sentiment = db.session.query(db.func.avg(Article.sent)).filter(Article.date==date.today()).all()
         timing(t, "article.todays_sentiment")
-        if sentiment:
+        if sentiment[0][0]:
             return round(sentiment[0][0]*100, 2)
         return 0
 
