@@ -38,6 +38,22 @@ Initially I thought of spidering the entire site but I decided that's way more
 work and way too much data, so instead I just get the front page every hour and
 only scrape articles I don't have yet.
 
+# Analysis
+
+I noodled a bit in Jupyter with the data at about the 200k article mark and
+found one really fascinating result:
+
+Political bias does not seem to be correlated with sentiment at all. The only
+correlation I've found is between factuality and sentiment. The happier a news
+agency, the more factual it is, with a Pearson correlation of 0.21, n=42.
+Whether that's significant, I have no idea. I'm not a statistician so I'm not
+fully sure how to calculate significance, apparently I'd have to create a null
+hypothesis, and that's more than I'm equipped to do right now.
+
+Factuality and bias data for my noodling came from mediabiasfactcheck.com. The
+sample size for the sentiment and neutrality data came by averaging all articles
+for each agency, with about 200k articles in the database.
+
 ## Dashboard
 
 - [ ] Sentiment over time graphs for each agency
