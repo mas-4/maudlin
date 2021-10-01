@@ -157,6 +157,5 @@ Thumbs.db
 setup.py
 .env
 logs
-*.ipynb
 scrapy.cfg
 .~lock*

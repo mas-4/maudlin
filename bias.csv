@@ -1,43 +1,43 @@
-agency,bias,factual
-abc,left center,high
-aljazeera,left center,mixed
-ap,least,very high
-atlantic,left center,high
-axios,left center,high
-bbc,left center,high
-blaze,extreme right,mixed
-breitbart,extreme right,mixed
-businessinsider,left center,high
-cbs,left center,high
-cnn,left,mixed
-dailybeast,left,mixed
-dailykos,extreme left,mixed
-dailymail,extreme right,low
-dailywire,right,mixed
-foreignpolicy,least,high
-fox,right,mixed
-guardian,left center,mixed
-hill,least biased,mostly factual
-huffpost,left,mixed
-intercept,left,mostly factual
-jacobin,left,high
-motherjones,left,high
-msnbc,left,mixed
-nbc,left center,high
-newyorker,left,high
-npr,left center,very high
-nypost,right center,mixed
-nyt,left center,high
-politico,left center,high
-reuters,least,very high
-salon,left,mostly factual
-slate,left,high
-tbt,left center,high
-telegraph,right,mixed
-time,left center,high
-usa,left center,high
-vanityfair,left,mostly factual
-vice,left center,mostly factual
-vox,left,mostly factual
-wapo,left center,mostly factual
-national review,right,mostly factual
+,agency,bias,factual
+0,abc,-1,4
+1,aljazeera,-1,2
+2,ap,0,5
+3,atlantic,-1,4
+4,axios,-1,4
+5,bbc,-1,4
+6,blaze,3,2
+7,breitbart,3,2
+8,businessinsider,-1,4
+9,cbs,-1,4
+10,cnn,-2,2
+11,dailybeast,-2,2
+12,dailykos,-3,2
+13,dailymail,3,1
+14,dailywire,2,2
+15,foreignpolicy,0,4
+16,fox,2,2
+17,guardian,-1,2
+18,hill,0,3
+19,huffpost,-2,2
+20,intercept,-2,3
+21,jacobin,-2,4
+22,motherjones,-2,4
+23,msnbc,-2,2
+24,nbc,-1,4
+25,newyorker,-2,4
+26,npr,-1,5
+27,nypost,1,2
+28,nyt,-1,4
+29,politico,-1,4
+30,reuters,0,5
+31,salon,-2,3
+32,slate,-2,4
+33,tbt,-1,4
+34,telegraph,2,2
+35,time,-1,4
+36,usa,-1,4
+37,vanityfair,-2,3
+38,vice,-1,3
+39,vox,-2,3
+40,wapo,-1,3
+41,national review,2,3
