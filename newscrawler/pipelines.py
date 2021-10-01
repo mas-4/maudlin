@@ -1,5 +1,5 @@
+from datetime import datetime as dt
 import re
-from itemadapter import ItemAdapter
 from newscrawler.models import Article, Agency, average
 from newscrawler import db
 import logging
@@ -55,6 +55,7 @@ class NewscrawlerPipeline:
             # first data point is just this article.
             agency.cum_sent = article.sent
             agency.cum_neut = article.neu
+            agency.last_date = dt.now().date()
 
         # update homepage if we change a thing
         agency.homepage = item['start']

@@ -1,0 +1,43 @@
+agency,bias,factual
+abc,left center,high
+aljazeera,left center,mixed
+ap,least,very high
+atlantic,left center,high
+axios,left center,high
+bbc,left center,high
+blaze,extreme right,mixed
+breitbart,extreme right,mixed
+businessinsider,left center,high
+cbs,left center,high
+cnn,left,mixed
+dailybeast,left,mixed
+dailykos,extreme left,mixed
+dailymail,extreme right,low
+dailywire,right,mixed
+foreignpolicy,least,high
+fox,right,mixed
+guardian,left center,mixed
+hill,least biased,mostly factual
+huffpost,left,mixed
+intercept,left,mostly factual
+jacobin,left,high
+motherjones,left,high
+msnbc,left,mixed
+nbc,left center,high
+newyorker,left,high
+npr,left center,very high
+nypost,right center,mixed
+nyt,left center,high
+politico,left center,high
+reuters,least,very high
+salon,left,mostly factual
+slate,left,high
+tbt,left center,high
+telegraph,right,mixed
+time,left center,high
+usa,left center,high
+vanityfair,left,mostly factual
+vice,left center,mostly factual
+vox,left,mostly factual
+wapo,left center,mostly factual
+national review,right,mostly factual

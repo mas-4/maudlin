@@ -159,3 +159,4 @@ setup.py
 logs
 *.ipynb
 scrapy.cfg
+.~lock*
