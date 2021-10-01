@@ -18,24 +18,31 @@ class AbcSpider(scrapy.Spider, BoilerPlateParser):
         if response.url != self.start_urls[0]:
             item = self.prepopulate_item(response)
 
-            item['title'] = soup.find('h1', class_='Article__Headline__Title').text.strip()
-            item['byline'] = soup.find('span', class_='Byline__Author').text.strip()
+            tag = 'h1'
+            attrs = {'class': re.compile('Article__Headline__Title')}
+            title = soup.find(tag, attrs=attrs).text.strip()
 
-            date = soup.find('div', class_='Byline__Meta Byline__Meta--publishDate').text.strip()
-            date = parser.parse(date)
-            item['date'] = date
+            byline = None
 
-            story = soup.find('section', class_='Article__Content story')
-            paragraphs = story.find_all('p')
+            tag = 'div'
+            attrs = {'class': re.compile('Byline__Meta Byline__Meta--publishDate')}
+            date = soup.find(tag, attrs=attrs)
+            date = parser.parse(date.text.strip())
+
+            tag = 'section'
+            attrs = {'class': re.compile('Article__Content story')}
+            root = soup.find(tag, attrs=attrs)
+            paragraphs = root.find_all('p')
             text = self.joinparagraphs(paragraphs)
-            item['text'] = text
 
+
+            item = self.populate_item(title, byline, date, text, item)
             yield item
 
         if response.url == self.start_urls[0]:
-            links = soup.find_all('a', attrs={'class': 'AnchorLink', 'href': re.compile(r'http.*\d?id=\d+$')})
-
+            attrs = {'class': 'AnchorLink', 'href': re.compile(r'http.*\d?id=\d+$')}
+            links = set(a['href'] for a in soup.find_all('a', attrs=attrs))
             for link in links:
-                if Article.query.filter(Article.url.endswith(link['href'])).first():
+                if Article.query.filter(Article.url.endswith(link)).first():
                     continue
-                yield response.follow(link['href'], callback=self.parse)
+                yield response.follow(link, callback=self.parse)
