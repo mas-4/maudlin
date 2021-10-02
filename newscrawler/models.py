@@ -1,9 +1,13 @@
-import time
 from datetime import date
 from statistics import mean
-from newscrawler import db
+import time
+
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declared_attr
-from newscrawler.utils import color, clamp, timing
+
+from newscrawler import db
+from newscrawler.utils import clamp, color, timing
+
 
 def average(prev_avg, x, n):
     """Function for a streaming average"""
@@ -50,7 +54,7 @@ class Article(Base):
     # article data
     url = db.Column(db.String)
     title = db.Column(db.String)
-    date = db.Column(db.Date)
+    date = db.Column(db.Date, index=True)
     byline = db.Column(db.String)
     text = db.Column(db.Text)
 
@@ -61,7 +65,9 @@ class Article(Base):
     sent = db.Column(db.Float) # pos - neg
     compound = db.Column(db.Float)
 
-    agency_id = db.Column(db.Integer, db.ForeignKey('agency.id'))
+    data = db.Column(JSONB)
+
+    agency_id = db.Column(db.Integer, db.ForeignKey('agency.id'), index=True)
     agency = db.relationship('Agency',
                              primaryjoin='Article.agency_id==Agency.id',
                              backref=db.backref('articles', lazy='dynamic'))
@@ -125,6 +131,8 @@ class Agency(Base):
     cum_sent = db.Column(db.Float, default=0.0, nullable=False)
     cum_neut = db.Column(db.Float, default=0.0, nullable=False)
     last_date = db.Column(db.Date)
+
+    data = db.Column(JSONB)
 
     def __repr__(self):
         return f'<Agency {self.name}: {self.homepage} ({self.articles.count()}) articles>'
