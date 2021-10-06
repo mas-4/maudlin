@@ -1,12 +1,19 @@
 from datetime import date
+import os
+import pathlib
 from statistics import mean
 import time
 
+import pandas as pd
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declared_attr
 
 from newscrawler import db
 from newscrawler.utils import clamp, color, timing
+
+ROOT = pathlib.Path(__file__).parent.parent.resolve()
+bias_df = pd.read_csv(os.path.join(ROOT, 'bias.csv'), index_col=0)
+
 
 
 def average(prev_avg, x, n):
@@ -14,6 +21,20 @@ def average(prev_avg, x, n):
     return ((prev_avg *
              n + x) /
             (n + 1));
+
+def partisan_sentiment(agencies):
+    """Given a list of agencies, returns a partisan sentiment score for the day
+    based on bias.
+
+    More negative scores mean democrats are happier, more positive scores means
+    republicans are happier.
+
+    It's just a dot product of the vectors [bias, sentiment].
+    """
+    score = 0
+    for agency in agencies:
+        score += agency.data['bias'] * agency.todays_sentiment
+    return score
 
 
 def windowed_query(q, column, windowsize):
