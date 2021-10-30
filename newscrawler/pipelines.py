@@ -1,12 +1,15 @@
+import os
 from datetime import datetime as dt
 import re
 from newscrawler.models import Article, Agency, average
 from newscrawler import db
 import logging
-
 import nltk
-nltk.download('vader_lexicon')
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+if not os.path.exists(os.path.expanduser('~/nltk_data')):
+    nltk.download('vader_lexicon')
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
 
 class NewscrawlerPipeline:
     def __init__(self):
