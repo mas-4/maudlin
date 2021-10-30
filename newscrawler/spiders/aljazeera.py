@@ -30,8 +30,9 @@ class AljazeeraSpider(scrapy.Spider, BoilerPlateParser):
             byline = re.sub('  +', ' ', byline.text.strip()) if byline else None
 
             tag = 'div'
-            attrs = {'class': 'article-dates'}
+            attrs = {'class': 'date-simple'}
             date = soup.find(tag, attrs)
+            date.span.decompose()
             date = date.text.strip()
             date = parser.parse(date)
 
