@@ -6,10 +6,12 @@ from newscrawler import db
 import logging
 import nltk
 
-if not os.path.exists(os.path.expanduser('~/nltk_data')):
+try:
+    nltk.data.find('tokenizers/punkt.zip')
+except:
     nltk.download('vader_lexicon')
-    from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 class NewscrawlerPipeline:
     def __init__(self):
