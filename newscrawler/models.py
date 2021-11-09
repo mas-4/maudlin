@@ -12,7 +12,10 @@ from newscrawler import db
 from newscrawler.utils import clamp, color, timing
 
 ROOT = pathlib.Path(__file__).parent.parent.resolve()
-bias_df = pd.read_csv(os.path.join(ROOT, 'bias.csv'), index_col=0)
+try:
+    bias_df = pd.read_csv(os.path.join(ROOT, 'bias.csv'), index_col=0)
+except:
+    bias_df = pd.DataFrame()
 
 
 
