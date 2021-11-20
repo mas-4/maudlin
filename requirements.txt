@@ -107,7 +107,7 @@ regex==2021.4.4
 requests==2.25.1
 scipy==1.6.3
 Scrapy==2.5.0
-git+https://github.com/malan88/scrapyd-client/
+scrapyd-client==1.2.0
 seaborn==0.11.1
 selenium==3.141.0
 Send2Trash==1.5.0
